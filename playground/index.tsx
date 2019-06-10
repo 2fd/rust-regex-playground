@@ -2,11 +2,11 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-import { ThemeProvider } from "./theme";
+import { ThemeProvider, defaultTheme } from "./theme";
 import { createStateFromHash, IState, updateHashFromState } from "./common";
 import rregex, { RRegExp, get_metadata } from "./rregex";
 import Store, { mergeHandlers, mergeStates } from "./store";
-import * as Evergreen from "evergreen-ui";
+// import * as Evergreen from "evergreen-ui";
 
 const root = document.getElementById("root");
 const store = new Store<IState>(
@@ -25,7 +25,7 @@ async function feature(name: string, evaluate: Promise<any>) {
 
 function render() {
   ReactDOM.render(
-    <ThemeProvider value={Evergreen.defaultTheme}>
+    <ThemeProvider value={defaultTheme}>
       <App store={store} />
     </ThemeProvider>,
     root
@@ -34,7 +34,7 @@ function render() {
 
 render();
 
-Object.assign(window, { store, RRegExp, Evergreen });
+Object.assign(window, { store, RRegExp });
 window.addEventListener("hashchange", () =>
   store.dispatch(createStateFromHash())
 );

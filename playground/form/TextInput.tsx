@@ -1,5 +1,6 @@
 import * as React from "react";
-import { Pane, Textarea } from "evergreen-ui";
+import Pane from "evergreen-ui/commonjs/layers/src/Pane.js";
+import Textarea from "evergreen-ui/commonjs/textarea/src/Textarea.js";
 import { BoxProps } from "ui-box";
 import { numberRangeProps, INumberRangeProps, fontInput } from "../common";
 import Theme from "../theme";

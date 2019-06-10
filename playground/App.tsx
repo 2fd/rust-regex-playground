@@ -1,13 +1,11 @@
-import {
-  Button,
-  Heading,
-  SegmentedControl,
-  Pane,
-  Code,
-  Icon,
-  Alert,
-  Spinner
-} from "evergreen-ui";
+import Button from "evergreen-ui/commonjs/buttons/src/Button.js";
+import Heading from "evergreen-ui/commonjs/typography/src/Heading.js";
+import Code from "evergreen-ui/commonjs/typography/src/Code.js";
+import SegmentedControl from "evergreen-ui/commonjs/segmented-control/src/SegmentedControl.js";
+import Alert from "evergreen-ui/commonjs/alert/src/Alert.js";
+import Spinner from "evergreen-ui/commonjs/spinner/src/Spinner.js";
+import Icon from "evergreen-ui/commonjs/icon/src/Icon.js";
+import Pane from "evergreen-ui/commonjs/layers/src/Pane.js";
 import * as React from "react";
 import { IState, Method, fontInput } from "./common";
 import TextInput from "./form/TextInput";
@@ -20,6 +18,7 @@ import ViewReplace from "./rust/ViewReplace";
 import ViewSyntax from "./rust/ViewSyntax";
 import GithubCircle from "./icon/GithubCircle";
 import Documentation from "./rust/Documentation";
+
 export interface IAppProps
   extends React.HTMLAttributes<HTMLDivElement>,
     React.HTMLProps<HTMLDivElement> {

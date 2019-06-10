@@ -1,4 +1,7 @@
-import { Heading, Pane, Code, Card } from "evergreen-ui";
+import Heading from "evergreen-ui/commonjs/typography/src/Heading.js";
+import Code from "evergreen-ui/commonjs/typography/src/Code.js";
+import Pane from "evergreen-ui/commonjs/layers/src/Pane.js";
+import Card from "evergreen-ui/commonjs/layers/src/Card.js";
 import * as React from "react";
 import { fontInput } from "../common";
 import Theme from "../theme";
