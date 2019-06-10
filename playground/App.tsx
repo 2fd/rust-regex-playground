@@ -129,7 +129,7 @@ export default function App({ store }: IAppProps) {
             target="_blank"
             href={
               "https://docs.rs/regex" +
-              (versions.regex ? versions.regex + "/regex/" : "")
+              (versions.regex ? "/" + versions.regex + "/regex/" : "")
             }
             appearance="minimal"
             height={32}
@@ -144,7 +144,7 @@ export default function App({ store }: IAppProps) {
             href={
               "https://docs.rs/regex-syntax" +
               (versions.regex_syntax
-                ? versions.regex_syntax + "/regex_syntax/"
+                ? "/" + versions.regex_syntax + "/regex_syntax/"
                 : "")
             }
             appearance="minimal"

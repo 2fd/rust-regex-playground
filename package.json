@@ -7,7 +7,9 @@
     "test": "wasm-pack test --node --chrome --headless",
     "start": "parcel index.html pkg/index_bg.wasm -p 8080",
     "clear": "rm -rf dist/pkg dist/*.js dist/*.css dist/*.map",
-    "build": "parcel build --public-url \"/rust-regex-playground/\" index.html pkg/index_bg.wasm"
+    "build": "npm run clear && npm run build::rust && npm run build::page",
+    "build::rust": "wasm-pack build  --out-name index  --target web --release",
+    "build::page": "parcel build --public-url \"/rust-regex-playground/\" index.html pkg/index_bg.wasm"
   },
   "repository": {
     "type": "git",
