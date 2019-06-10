@@ -1,0 +1,45 @@
+{
+  "name": "rust-regex-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "wasm-pack test --node --chrome --headless"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/2fd/rust-regex-playground.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/2fd/rust-regex-playground/issues"
+  },
+  "homepage": "https://github.com/2fd/rust-regex-playground#readme",
+  "jest": {
+    "preset": "ts-jest"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
+    "@types/ui-box": "^1.4.0",
+    "autoprefixer": "^9.6.0",
+    "cssnano": "^4.1.10",
+    "evergreen-ui": "^4.17.0",
+    "immutable": "^4.0.0-rc.12",
+    "jest": "^24.8.0",
+    "parcel-plugin-typed-css-modules": "git+ssh://git@github.com/2fd/parcel-plugin-typed-css-modules.git#2d9902b708168e7f95f35d32413529b68ccc9e91",
+    "postcss-modules": "^1.4.1",
+    "postcss-preset-env": "^6.6.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.17.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "tslint-react": "^4.0.0",
+    "tslint-react-hooks": "^2.1.0",
+    "typescript": "^3.5.1"
+  }
+}
