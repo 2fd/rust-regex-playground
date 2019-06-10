@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "wasm-pack test --node --chrome --headless"
+    "test": "wasm-pack test --node --chrome --headless",
+    "clear": "rm -rf dist/pkg dist/*.js dist/*.css dist/*.map",
+    "build": "parcel build --public-url rust-regex-playground/ index.html pkg/index_bg.wasm"
   },
   "repository": {
     "type": "git",

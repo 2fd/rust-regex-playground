@@ -105,6 +105,7 @@ export default function App({ store }: IAppProps) {
   const completed = !!(store.value.features && store.value.features.completed);
   const rregex = !!(store.value.features && store.value.features.rregex);
   const rregexError = store.value.features && store.value.features.rregexError;
+  const versions = store.value.versions || {};
 
   return (
     <Pane display="flex">
@@ -126,7 +127,10 @@ export default function App({ store }: IAppProps) {
           <Button
             is="a"
             target="_blank"
-            href="#"
+            href={
+              "https://docs.rs/regex" +
+              (versions.regex ? versions.regex + "/regex/" : "")
+            }
             appearance="minimal"
             height={32}
             iconAfter="book"
@@ -137,7 +141,12 @@ export default function App({ store }: IAppProps) {
           <Button
             is="a"
             target="_blank"
-            href="#"
+            href={
+              "https://docs.rs/regex-syntax" +
+              (versions.regex_syntax
+                ? versions.regex_syntax + "/regex_syntax/"
+                : "")
+            }
             appearance="minimal"
             height={32}
             iconAfter="book"
