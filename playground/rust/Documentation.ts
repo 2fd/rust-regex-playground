@@ -15,6 +15,15 @@ export default class Documentation {
 
   constructor(public readonly options: DocumentationOptions) {}
 
+  getHomeUrl() {
+    return (
+      this.options.baseUrl +
+      "/" +
+      this.options.pkg +
+      (this.options.version ? "/" + this.options.version : "")
+    );
+  }
+
   getUrlPath(type: string, name: string, variant?: string) {
     const sections = name.split("::");
     const lastSection = sections.pop();
@@ -31,10 +40,8 @@ export default class Documentation {
 
   getUrl(type: string, name: string, variant?: string) {
     return [
-      this.options.baseUrl,
-      this.options.pkg,
-      this.options.version,
-      this.getUrlPath(type, name, variant)
+      this.getHomeUrl(),
+      this.options.version && this.getUrlPath(type, name, variant)
     ].join("/");
   }
 }

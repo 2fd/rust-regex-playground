@@ -18,6 +18,8 @@ import ViewReplace from "./rust/ViewReplace";
 import ViewSyntax from "./rust/ViewSyntax";
 import GithubCircle from "./icon/GithubCircle";
 import Documentation from "./rust/Documentation";
+import TopBar from "./layout/TopBar";
+import MenuItem from "./layout/MenuItem";
 
 export interface IAppProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -105,82 +107,23 @@ export default function App({ store }: IAppProps) {
   const completed = !!(store.value.features && store.value.features.completed);
   const rregex = !!(store.value.features && store.value.features.rregex);
   const rregexError = store.value.features && store.value.features.rregexError;
-  const versions = store.value.versions || {};
 
   return (
     <Pane display="flex">
-      <Pane
-        display="flex"
-        width="100vw"
-        height="3.5rem"
-        padding=".5rem"
-        backgroundColor="white"
-        elevation={1}
-        style={{ position: "fixed", zIndex: 999 }}
-      >
-        <Pane flex={1} alignItems="center" display="flex" paddingX="1rem">
-          <Heading is="h1" size={500}>
-            RUST REGEX PLAYGROUND
-          </Heading>
-        </Pane>
-        <Pane alignItems="center" display="flex">
-          <Button
-            is="a"
-            target="_blank"
-            href={
-              "https://docs.rs/regex" +
-              (versions.regex ? "/" + versions.regex + "/regex/" : "")
-            }
-            appearance="minimal"
-            height={32}
-            iconAfter="book"
-            intent="none"
-          >
-            RUST-REGEX
-          </Button>
-          <Button
-            is="a"
-            target="_blank"
-            href={
-              "https://docs.rs/regex-syntax" +
-              (versions.regex_syntax
-                ? "/" + versions.regex_syntax + "/regex_syntax/"
-                : "")
-            }
-            appearance="minimal"
-            height={32}
-            iconAfter="book"
-            intent="none"
-          >
-            RUST-REGEX-SYNTAX
-          </Button>
-          <Button
-            is="a"
-            target="_blank"
-            href="#"
-            appearance="minimal"
-            height={32}
-            intent="none"
-          >
-            PLAYGROUND
-            <GithubCircle size={16} style={{ marginLeft: ".5rem" }} />
-          </Button>
-          {store.value && store.value.features && store.value.features.share && (
-            <Button
-              appearance="minimal"
-              height={32}
-              iconAfter="share"
-              intent="none"
-            >
-              SHARE
-            </Button>
-          )}
-          {/* <IconButton appearance="minimal" icon="notifications" iconSize={18} /> */}
-          {/* Below you can see the marginRight property on a Button. */}
-          {/* <Button marginRight={16}>Button</Button>
-          <Button appearance="primary">Primary Button</Button> */}
-        </Pane>
-      </Pane>
+      <TopBar title="RUST REGEX PLAYGROUND">
+        <MenuItem href={docRegex.getHomeUrl()} iconAfter="book">
+          RUST-REGEX
+        </MenuItem>
+        <MenuItem href={docRegexSyntax.getHomeUrl()} iconAfter="book">
+          RUST-REGEX-SYNTAX
+        </MenuItem>
+        <MenuItem
+          href="https://github.com/2fd/rust-regex-playground"
+          iconAfter="github"
+        >
+          PLAYGROUND
+        </MenuItem>
+      </TopBar>
       <Pane
         width="50%"
         height="100vh"
@@ -286,6 +229,7 @@ export default function App({ store }: IAppProps) {
             <Spinner size={64} />
           </Pane>
         )}
+
         {completed && !rregex && (
           <Pane width="100%" padding="2rem">
             <Alert intent="danger" title="rust-regex could not be loaded">
