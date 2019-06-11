@@ -266,6 +266,7 @@ export default function App({ store }: IAppProps) {
 
         {completed &&
           rregex &&
+          !result.regexExpressionError &&
           (store.value.method === Method.syntax && (
             <ViewSyntax
               size=".75rem"
