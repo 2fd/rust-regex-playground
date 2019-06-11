@@ -26,7 +26,7 @@ export default function ViewSyntax({
   return (
     <Pane {...props}>
       <Heading size={100} style={{ lineHeight: "1.5rem" }}>
-        Replace:
+        Syntax:
       </Heading>
       <Card
         background="tint1"

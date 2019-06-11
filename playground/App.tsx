@@ -1,22 +1,18 @@
-import Button from "evergreen-ui/commonjs/buttons/src/Button.js";
 import Heading from "evergreen-ui/commonjs/typography/src/Heading.js";
 import Code from "evergreen-ui/commonjs/typography/src/Code.js";
 import SegmentedControl from "evergreen-ui/commonjs/segmented-control/src/SegmentedControl.js";
 import Alert from "evergreen-ui/commonjs/alert/src/Alert.js";
 import Spinner from "evergreen-ui/commonjs/spinner/src/Spinner.js";
-import Icon from "evergreen-ui/commonjs/icon/src/Icon.js";
 import Pane from "evergreen-ui/commonjs/layers/src/Pane.js";
 import * as React from "react";
 import { IState, Method, fontInput } from "./common";
 import TextInput from "./form/TextInput";
 import Theme from "./theme";
-// import * as theme from 'evergreen-ui/commonjs/theme'
 import Store from "./store";
 import { RRegExp } from "./rregex";
 import ViewMatch from "./rust/ViewMatch";
 import ViewReplace from "./rust/ViewReplace";
 import ViewSyntax from "./rust/ViewSyntax";
-import GithubCircle from "./icon/GithubCircle";
 import Documentation from "./rust/Documentation";
 import TopBar from "./layout/TopBar";
 import MenuItem from "./layout/MenuItem";
@@ -171,18 +167,7 @@ export default function App({ store }: IAppProps) {
             minRows={store.value.method === Method.syntax ? 10 : 1}
             onChange={handleChangeProp("regex")}
             value={store.value.regex}
-            marginBottom={result.regexExpressionError && ".5rem"}
           />
-          {result.regexExpressionError && (
-            <Code
-              size={300}
-              appearance="minimal"
-              style={{ whiteSpace: "pre", color: theme.colors.text.danger }}
-            >
-              <Icon icon="error" color="danger" size={12} />{" "}
-              {result.regexExpressionError.message}
-            </Code>
-          )}
         </Pane>
         {store.value.method === Method.replace && (
           <Pane marginBottom="1rem">
@@ -238,8 +223,25 @@ export default function App({ store }: IAppProps) {
           </Pane>
         )}
 
+        {completed && rregex && result.regexExpressionError && (
+          <Pane width="100%" padding="2rem">
+            <Alert intent="danger" title="regex parse error:">
+              <Code
+                size={300}
+                appearance="minimal"
+                style={{ whiteSpace: "pre", color: theme.colors.text.danger }}
+              >
+                {result.regexExpressionError.message.slice(
+                  result.regexExpressionError.message.indexOf("\n")
+                )}
+              </Code>
+            </Alert>
+          </Pane>
+        )}
+
         {completed &&
           rregex &&
+          !result.regexExpressionError &&
           (store.value.method === Method.find && (
             <ViewMatch
               size=".75rem"
@@ -252,6 +254,7 @@ export default function App({ store }: IAppProps) {
 
         {completed &&
           rregex &&
+          !result.regexExpressionError &&
           (store.value.method === Method.replace && (
             <ViewReplace
               size=".75rem"
