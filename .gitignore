@@ -4,8 +4,11 @@
 /pkg/
 /dist/
 /.cache/
+/.parcel-cache/
 /.vscode/
 /node_modules/
+/packages/rregex/target/
+/packages/rregex/lib/
 /gh-pages/
 .DS_Store
 
