@@ -2,14 +2,10 @@
   "name": "rust-regex-playground",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "wasm-pack test --node --chrome --headless",
-    "start": "parcel index.html pkg/index_bg.wasm -p 8080",
-    "clear": "rm -rf dist/pkg dist/*.js dist/*.css dist/*.map",
-    "build": "npm run clear && npm run build::rust && npm run build::page",
-    "build::rust": "wasm-pack build  --out-name index  --target web --release",
-    "build::page": "parcel build --public-url \"/rust-regex-playground/\" index.html pkg/index_bg.wasm"
+    "start": "parcel index.html -p 8080",
+    "format": "prettier --write \"src/**/*.{ts,tsx,css,js,jsx,json,md}\"",
+    "build": "parcel build --public-url \"/rust-regex-playground/\" index.html"
   },
   "repository": {
     "type": "git",
@@ -25,26 +21,36 @@
     "preset": "ts-jest"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.13",
-    "@types/react": "^16.8.19",
-    "@types/react-dom": "^16.8.4",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.11",
     "@types/ui-box": "^1.4.0",
     "autoprefixer": "^9.6.0",
     "cssnano": "^4.1.10",
-    "evergreen-ui": "^4.17.0",
     "immutable": "^4.0.0-rc.12",
-    "jest": "^24.8.0",
-    "parcel-plugin-typed-css-modules": "git+ssh://git@github.com/2fd/parcel-plugin-typed-css-modules.git#2d9902b708168e7f95f35d32413529b68ccc9e91",
+    "parcel": "^2.0.1",
     "postcss-modules": "^1.4.1",
     "postcss-preset-env": "^6.6.0",
+    "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "ts-jest": "^24.0.2",
     "tslint": "^5.17.0",
     "tslint-plugin-prettier": "^2.0.1",
     "tslint-react": "^4.0.0",
     "tslint-react-hooks": "^2.1.0",
-    "typescript": "^3.5.1"
+    "typescript": "^4.5.2"
+  },
+  "workspaces": [
+    "packages/rregex",
+    "packages/playground"
+  ],
+  "dependencies": {
+    "evergreen-ui": "^6.6.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rregex1.0": "npm:rregex@1.0",
+    "rregex1.1": "npm:rregex@1.1",
+    "rregex1.2": "npm:rregex@1.2",
+    "rregex1.3": "npm:rregex@1.3",
+    "rregex1.4": "npm:rregex@1.4",
+    "rregex1.5": "npm:rregex@1.5"
   }
 }
