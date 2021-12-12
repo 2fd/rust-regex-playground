@@ -4,16 +4,16 @@ Web tool to evaluate rust regular expressions
 
 ## Detect parse errors
 
-![example-error](./playground/img/example-error.png)
+![error](./src/images/error.jpg)
 
 ## Evaluate syntax
 
-![example-syntax](./playground/img/example-syntax.png)
+![syntax](./src/images/syntax.jpg)
 
 ## Preview find and matches
 
-![example-find](./playground/img/example-find.png)
+![find](./src/images/find.jpg)
 
 ## Preview replace
 
-![example-replace](./playground/img/example-replace.png)
+![replace](./src/images/replace.jpg)
