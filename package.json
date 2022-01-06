@@ -27,7 +27,7 @@
     "autoprefixer": "^9.6.0",
     "cssnano": "^4.1.10",
     "immutable": "^4.0.0-rc.12",
-    "parcel": "^2.0.1",
+    "parcel": "^2.1.0",
     "postcss-modules": "^1.4.1",
     "postcss-preset-env": "^6.6.0",
     "prettier": "^1.19.1",
