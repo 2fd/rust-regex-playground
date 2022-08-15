@@ -25,7 +25,7 @@
     "@types/react-dom": "^17.0.17",
     "@types/ui-box": "^2.0.0",
     "autoprefixer": "^10.4.7",
-    "cssnano": "^5.1.12",
+    "cssnano": "^5.1.13",
     "immutable": "^4.1.0",
     "parcel": "^2.6.1",
     "postcss-modules": "^4.3.1",
