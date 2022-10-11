@@ -44,7 +44,7 @@
     "packages/playground"
   ],
   "dependencies": {
-    "evergreen-ui": "^6.9.12",
+    "evergreen-ui": "^6.10.5",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "rregex1.0": "npm:rregex@1.0",
