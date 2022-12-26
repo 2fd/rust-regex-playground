@@ -1,6 +1,6 @@
 # RUST REGEX PLAYGROUND
 
-Web tool to evaluate rust regular expressions
+Web tool to evaluate rust regular expressions using [rregex](https://github.com/2fd/rregex)
 
 ## Detect parse errors
 
