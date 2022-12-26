@@ -52,6 +52,8 @@
     "rregex1.2": "npm:rregex@1.2",
     "rregex1.3": "npm:rregex@1.3",
     "rregex1.4": "npm:rregex@1.4",
-    "rregex1.5": "npm:rregex@1.5"
+    "rregex1.5": "npm:rregex@1.5",
+    "rregex1.6": "npm:rregex@1.6",
+    "rregex1.7": "npm:rregex@1.7"
   }
 }

@@ -5,9 +5,13 @@ import * as rregex1_2 from 'rregex1.2'
 import * as rregex1_3 from 'rregex1.3'
 import * as rregex1_4 from 'rregex1.4'
 import * as rregex1_5 from 'rregex1.5'
+import * as rregex1_6 from 'rregex1.6'
+import * as rregex1_7 from 'rregex1.7'
 import { callOnce } from './utils'
 
 const list = [
+  rregex1_7,
+  rregex1_6,
   rregex1_5,
   rregex1_4,
   rregex1_3,
@@ -18,14 +22,7 @@ const list = [
 
 export default list
 
-export type RRegex =
-  | typeof rregex1_5
-  | typeof rregex1_4
-  | typeof rregex1_3
-  | typeof rregex1_2
-  | typeof rregex1_1
-  | typeof rregex1_0
-
+export type RRegex = typeof list[number]
 export type Match = rregex1_0.Match
 export type Hir = rregex1_0.Hir
 
