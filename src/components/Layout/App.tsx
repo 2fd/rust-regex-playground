@@ -174,7 +174,7 @@ export default function App() {
           </Pane>
           <Pane flex="1" />
           <Pane>
-            <Select value={state.version} onChange={selectVersion} width={200}>
+            <Select value={state.version} onChange={selectVersion} width='12rem'>
               {list.map(mod => {
                 return <option key={mod.metadata.regex} value={mod.metadata.regex}>v{mod.metadata.regex}</option>
               })}
@@ -229,6 +229,8 @@ function SectionPane(props: PaneProps) {
     paddingX="3rem"
     paddingTop="8rem"
     paddingBottom=".5rem"
+    paddingLeft="40px"
+    paddingRight="40px"
     borderRight
     overflow="auto"
     {...props}
