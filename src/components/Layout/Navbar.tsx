@@ -36,6 +36,13 @@ export default React.memo(function Navbar(props: NavbarProps) {
       <Pane alignItems="center" display="flex">
         <NavbarItem
           iconAfter={Github}
+          href="https://github.com/2fd/rust-regex-playground"
+          target="_blank"
+        >
+          PLAYGROUND CODE
+        </NavbarItem>
+        <NavbarItem
+          iconAfter={Github}
           href="https://github.com/2fd/rregex"
           target="_blank"
         >
