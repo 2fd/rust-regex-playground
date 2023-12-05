@@ -317,7 +317,7 @@ export default function App() {
           )}
           {!!rregex && !state.error && state.method === Method.Replace && (
             <div className="pb-8">
-              <ViewReplace value={state.replace} />
+              <ViewReplace value={state.result} />
             </div>
           )}
           {!!rregex && !state.error && state.match && (
