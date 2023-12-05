@@ -15,8 +15,8 @@ import ViewMatch from './Rust/ViewMatch.tsx'
 import ViewReplace from './Rust/ViewReplace.tsx'
 import ViewSyntax from './Rust/ViewSyntax.tsx'
 import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
-import Rust from './svg/Rust.tsx'
-import Github from './svg/Github.tsx'
+import Rust from './Icon/Rust.tsx'
+import Github from './Icon/Github.tsx'
 
 const enum Method {
   Find = 'find',
