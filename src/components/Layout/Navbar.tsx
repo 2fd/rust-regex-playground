@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import Github from '../Icon/Github.tsx'
-import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../../utils.ts'
+import Github from '../svg/Github.tsx'
 import { isDark, toggleDark } from '../../theme.ts'
 import SunIcon from '@heroicons/react/24/solid/esm/SunIcon.js'
 import MoonIcon from '@heroicons/react/24/solid/esm/MoonIcon.js'

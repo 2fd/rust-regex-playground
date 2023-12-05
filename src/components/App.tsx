@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
+import ArrowPathIcon from '@heroicons/react/24/solid/esm/ArrowPathIcon.js'
 import {
   useRRegex,
   VERSIONS,
@@ -8,15 +9,14 @@ import {
   RRegexVersion,
 } from '../rregex.ts'
 import Navbar from './Layout/Navbar.tsx'
-import Loading from './Icon/Loading.tsx'
 import Alert from './Layout/Alert.tsx'
 import Input from './Layout/Input.tsx'
 import ViewMatch from './Rust/ViewMatch.tsx'
 import ViewReplace from './Rust/ViewReplace.tsx'
 import ViewSyntax from './Rust/ViewSyntax.tsx'
 import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
-import Rust from './Icon/Rust.tsx'
-import Github from './Icon/Github.tsx'
+import Rust from './svg/Rust.tsx'
+import Github from './svg/Github.tsx'
 
 const enum Method {
   Find = 'find',
@@ -301,7 +301,7 @@ export default function App() {
         <section className="min-h-screen w-2/6 flex-auto bg-white pt-24 dark:bg-neutral-700">
           {!rregex && (
             <div className="flex justify-center p-20">
-              <Loading className="h-8 w-8 animate-spin text-indigo-600 dark:text-white" />
+              <ArrowPathIcon className="h-8 w-8 animate-spin text-indigo-600 dark:text-white" />
             </div>
           )}
           {!!rregex && state.error && (
