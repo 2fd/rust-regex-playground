@@ -1,35 +1,29 @@
 import React from 'react'
-import { BoxProps } from 'ui-box'
-import { Heading, Code, Pane, Card } from 'evergreen-ui'
 
-export type ViewReplaceProps = Omit<BoxProps<any>, 'background'> & {
-  value?: string | undefined,
-  error?: string | undefined,
-}
+export type ViewReplaceProps = Partial<{
+  value: string
+}>
 
-export default function ViewReplace({ value, error, ...props }: ViewReplaceProps) {
+export default React.memo(function ViewReplace({ value }: ViewReplaceProps) {
   return (
-    <Pane {...props}>
-      <Heading size={100} style={{ lineHeight: '1.5rem' }}>
-        Replace:
-      </Heading>
-      <Card
-        background="tint1"
-        padding="1rem"
-        elevation={0}
-        width="100%"
-      >
+    <div className="w-full">
+      <div className="mx-5">
+        <p className="mb-1 text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+          REPLACED:
+        </p>
         {value === undefined && (
-          <Heading size={100} paddingY="5rem" textAlign="center">
-            MISSING EXPRESSION
-          </Heading>
+          <div className="w-full rounded bg-slate-100 px-4 py-2 font-mono text-sm text-gray-600 shadow ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
+            <code>MISSING EXPRESSION</code>
+          </div>
         )}
         {value !== undefined && (
-          <Code size={300} appearance="minimal" wordBreak="break-all" wordWrap="break-word" whiteSpace="pre-wrap" border="0" background="transparent" padding="0" margin="0" >
-            {value || " "}
-          </Code>
+          <div className="w-full rounded bg-slate-100 px-4 py-2 font-mono text-sm text-gray-600 shadow ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
+            <pre className="block min-h-[1.2em] w-full overflow-auto">
+              {value || ''}
+            </pre>
+          </div>
         )}
-      </Card>
-    </Pane>
+      </div>
+    </div>
   )
-}
+})

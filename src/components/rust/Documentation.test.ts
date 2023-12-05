@@ -1,4 +1,4 @@
-import Documentation from './Documentation'
+import Documentation from './Documentation.js'
 
 test('getUrl', () => {
   const doc = Documentation.fromPackage('regex-syntax', '0.6.6')

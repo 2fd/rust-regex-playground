@@ -1,61 +1,95 @@
-import { useEffect, useMemo, useState } from 'react'
-import * as rregex1_0 from 'rregex1.0'
-import * as rregex1_1 from 'rregex1.1'
-import * as rregex1_2 from 'rregex1.2'
-import * as rregex1_3 from 'rregex1.3'
-import * as rregex1_4 from 'rregex1.4'
-import * as rregex1_5 from 'rregex1.5'
-import * as rregex1_6 from 'rregex1.6'
-import * as rregex1_7 from 'rregex1.7'
-import { callOnce } from './utils'
+import { useEffect, useState } from 'react'
+import type * as rregex from 'rregex1.7'
+import { memo } from 'radash'
 
-const list = [
-  rregex1_7,
-  rregex1_6,
-  rregex1_5,
-  rregex1_4,
-  rregex1_3,
-  rregex1_2,
-  rregex1_1,
-  rregex1_0,
-] as const
+export const VERSIONS = {
+  '1.7': import('rregex1.7'),
+  '1.6': import('rregex1.6'),
+  '1.5': import('rregex1.5'),
+  '1.4': import('rregex1.4'),
+  '1.3': import('rregex1.3'),
+  '1.2': import('rregex1.2'),
+  '1.1': import('rregex1.1'),
+  '1.0': import('rregex1.0'),
+} as const
 
-export default list
+export type RRegexVersion = keyof typeof VERSIONS
+export type Hir = rregex.Hir
+export type Match = rregex.Match
+export type RRegex = rregex.RRegex
 
-export type RRegex = typeof list[number]
-export type Match = rregex1_0.Match
-export type Hir = rregex1_0.Hir
-
-export function getVersion(version: string) {
-  return list.find(mod => mod.metadata.regex === version)!
+export const isRRegexVersion = (
+  version: string | null | undefined
+): version is RRegexVersion => {
+  return !!version && version in VERSIONS
 }
 
-const initializer = new Map(list.map(mod => {
-  return [mod.metadata.regex as string, callOnce(mod.default)] as const
-}))
+const initializer = memo(
+  async (version: RRegexVersion) => {
+    const mod = await VERSIONS[version]
+    await (mod.default as any)()
+    return mod
+  },
+  {
+    ttl: Infinity,
+    key: (version: RRegexVersion) => version,
+  }
+)
+
+type State = {
+  rregex: typeof rregex | null
+  version: string
+  loading: boolean
+}
 
 export function useRRegex(version: string) {
-  const [rregex, setRRegex] = useState<RRegex | null>(null)
+  const [state, setRRegex] = useState<State | null>(null)
+
   useEffect(() => {
-    let cancelled = false
-
-    Promise.resolve()
-      .then(() => initializer.get(version)!())
-      .then(() => {
-        if (!cancelled) {
-          setRRegex(getVersion(version))
-        }
-      })
-      .catch(console.error)
-
-    return () => {
-      cancelled = true
+    if (state?.version === version) {
+      return
     }
-  }, [version, setRRegex])
 
-  return rregex
+    setRRegex({
+      rregex: null,
+      loading: isRRegexVersion(version),
+      version,
+    })
+
+    if (isRRegexVersion(version)) {
+      Promise.resolve()
+        .then(() => initializer(version))
+        .then((rregex) => {
+          setRRegex((state) => {
+            if (state?.version !== version) {
+              return state
+            }
+
+            return {
+              ...state,
+              rregex: rregex as any,
+              loading: false,
+            }
+          })
+        })
+        .catch((err) => {
+          console.error(err)
+          setRRegex((state) => {
+            if (state?.version !== version) {
+              return state
+            }
+
+            return {
+              ...state,
+              loading: false,
+            }
+          })
+        })
+    }
+  }, [version, state, setRRegex])
+
+  return state?.rregex || null
 }
-
 
 export const encoder = new TextEncoder()
 export const decoder = new TextDecoder()

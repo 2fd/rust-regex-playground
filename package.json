@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "parcel index.html -p 8080",
+    "setup": "husky install && husky add .husky/pre-commit \"npm run format\" && git add .husky/pre-commit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,js,jsx,json,md}\"",
     "build": "parcel build index.html"
   },
@@ -13,40 +14,28 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/2fd/rust-regex-playground/issues"
   },
   "homepage": "https://github.com/2fd/rust-regex-playground#readme",
-  "jest": {
-    "preset": "ts-jest"
-  },
   "devDependencies": {
-    "@types/react": "^17.0.47",
-    "@types/react-dom": "^17.0.17",
-    "@types/ui-box": "^2.0.0",
-    "autoprefixer": "^10.4.7",
-    "cssnano": "^5.1.12",
-    "immutable": "^4.1.0",
-    "parcel": "^2.6.1",
-    "postcss-modules": "^4.3.1",
-    "postcss-preset-env": "^7.7.1",
-    "prettier": "^2.7.1",
-    "process": "^0.11.10",
-    "prop-types": "^15.8.1",
-    "tslint": "^6.1.3",
-    "tslint-plugin-prettier": "^2.3.0",
-    "tslint-react": "^5.0.0",
-    "tslint-react-hooks": "^2.2.2",
-    "typescript": "^4.7.4"
+    "@types/react": "^18.2.39",
+    "@types/react-dom": "^18.2.17",
+    "husky": "^8.0.3",
+    "parcel": "^2.10.3",
+    "postcss": "^8.4.31",
+    "prettier": "^3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.7",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.3.2"
   },
-  "workspaces": [
-    "packages/rregex",
-    "packages/playground"
-  ],
   "dependencies": {
-    "evergreen-ui": "^6.13.2",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "@heroicons/react": "^2.0.18",
+    "intl-messageformat": "^10.5.8",
+    "radash": "^11.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rregex1.0": "npm:rregex@1.0",
     "rregex1.1": "npm:rregex@1.1",
     "rregex1.2": "npm:rregex@1.2",

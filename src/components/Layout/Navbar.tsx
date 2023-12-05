@@ -1,8 +1,10 @@
-import React from 'react'
-import { Pane, Heading, Button, ButtonProps, Badge } from 'evergreen-ui'
-import Github from '../icon/Github'
-import Rust from '../icon/Rust'
-import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../../utils'
+import React, { useCallback, useState } from 'react'
+import Github from '../Icon/Github.js'
+import Rust from '../Icon/Rust.js'
+import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../../utils.js'
+import { isDark, toggleDark } from '../../theme.js'
+import SunIcon from '@heroicons/react/24/solid/esm/SunIcon.js'
+import MoonIcon from '@heroicons/react/24/solid/esm/MoonIcon.js'
 
 export type NavbarProps = {
   rustRegexVersion?: string
@@ -10,79 +12,52 @@ export type NavbarProps = {
 }
 
 export default React.memo(function Navbar(props: NavbarProps) {
+  const [dark, set] = useState(() => isDark())
+  const toggle = useCallback(() => {
+    set(toggleDark())
+  }, [dark])
+
   return (
-    <Pane
-      display="flex"
-      width="100vw"
-      height="64px"
-      paddingLeft="40px"
-      paddingRight="40px"
-      backgroundColor="white"
-      borderBottom="1px solid #edeff5"
-      className="Navbar"
-      style={{ position: 'fixed', zIndex: 999 }}
-    >
-      <Pane flex={1} alignItems="center" display="flex" paddingX="1rem">
-        <Heading is="h1" size={500}>
+    <header className="absolute left-0 top-0 mx-auto flex w-full justify-between border-b border-b-neutral-200 bg-white shadow-md dark:border-b-neutral-600 dark:bg-neutral-800">
+      <div className="relative px-4 py-4">
+        <h1 className="text-base font-medium text-neutral-900 dark:text-white">
           RUST REGEX PLAYGROUND
-          <sup>
-            {' '}
-            <Badge>
-              {props.rustRegexVersion || 'latest'}
-            </Badge>
-          </sup>
-        </Heading>
-      </Pane>
-      <Pane alignItems="center" display="flex">
-        <NavbarItem
-          iconAfter={Github}
+        </h1>
+        <span className="absolute left-full top-0 mx-0 my-4 block rounded border-neutral-300 bg-neutral-100 px-1 py-0 font-mono text-xs text-neutral-900 dark:bg-neutral-700 dark:text-neutral-300">
+          {props.rustRegexVersion || 'latest'}
+        </span>
+      </div>
+      <div className="relative px-4 py-4">
+        <a
+          className="mx-1 rounded-md px-2 py-1 text-sm font-normal uppercase text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
           href="https://github.com/2fd/rust-regex-playground"
           target="_blank"
         >
-          PLAYGROUND CODE
-        </NavbarItem>
-        <NavbarItem
-          iconAfter={Github}
-          href="https://github.com/2fd/rregex"
-          target="_blank"
+          <Github
+            width="1.2em"
+            height="1.2em"
+            className="inline-block align-text-top"
+          />
+        </a>
+        <a
+          className="mx-1 cursor-pointer rounded-md px-2 py-1 text-sm font-normal uppercase text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+          onClick={toggle}
         >
-          RREGEX
-        </NavbarItem>
-        <NavbarItem
-          iconAfter={Rust}
-          href={getRustRegexSyntaxDocs(props.rustRegexSyntaxVersion)}
-          target="_blank"
-        >
-          RUST-REGEX-SYNTAX
-        </NavbarItem>
-        <NavbarItem
-          iconAfter={Rust}
-          href={getRustRegexDocs(props.rustRegexVersion)}
-          target="_blank"
-        >
-          RUST-REGEX
-        </NavbarItem>
-      </Pane>
-    </Pane>
+          {dark ? (
+            <MoonIcon
+              width="1.2em"
+              height="1.2em"
+              className="ml-1 inline-block align-text-top"
+            />
+          ) : (
+            <SunIcon
+              width="1.2em"
+              height="1.2em"
+              className="ml-1 inline-block align-text-top"
+            />
+          )}
+        </a>
+      </div>
+    </header>
   )
-})
-
-export const NavbarItem = React.memo(function (
-  props: Pick<ButtonProps, 'children' | 'iconAfter'> &
-    Pick<React.AnchorHTMLAttributes<any>, 'href' | 'rel' | 'target'>
-) {
-  return (
-    <Button
-      {...props}
-      is={Anchor}
-      appearance="minimal"
-      intent="none"
-      size="medium"
-      border="0"
-    />
-  )
-})
-
-const Anchor = React.memo(function (props: any) {
-  return <a {...props} />
 })

@@ -1,106 +1,66 @@
 import React from 'react'
-import { BoxProps } from 'ui-box'
-import { Heading, Code, Pane, Card } from 'evergreen-ui'
-import { Struct } from './Types'
-import Documentation from './Documentation'
-import { Match } from 'rregex1.0'
-import { splitFromMatch } from '../../rregex'
+import { IntlMessageFormat } from 'intl-messageformat'
+import { Struct } from './Types.js'
+import type { Match } from '../../rregex.js'
 
-export type ViewMatchProps = Omit<BoxProps<any>, 'background'> & {
+export type ViewMatchProps = {
   value: string
   matches?: Match[]
   version?: string
 }
 
-export default function ViewMatch({
-  value,
-  matches,
-  version,
-  ...props
-}: ViewMatchProps) {
+const matches = new IntlMessageFormat(
+  `{len, plural,
+    =0 {no matches}
+    =1 {1 match}
+    other {# matches}
+  }`,
+  'en-US'
+)
+
+export default function ViewMatch(props: ViewMatchProps) {
   // const theme = React.useContext(Theme)
-  const matchesLen = (matches || []).length
+  const len = (props.matches || []).length
   // const colorSuccess = theme.colors.text.success
   // const key = keyGenerator()
-  const matchesSplits = React.useMemo(() => splitFromMatch(value, matches), [
-    value,
-    matches,
-  ])
 
   return (
-    <Pane {...props}>
-      {!matchesLen && (
-        <Heading size={100} float="right" opacity={.7}>
-          NO MATCHES
-        </Heading>
-      )}
-      {!!matchesLen && (
-        <Heading size={100} float="right" opacity={.7}>
-          {matchesLen}
-          {' MATCH FOUND'}
-        </Heading>
-      )}
-      <Heading size={100} style={{ lineHeight: '1.5rem' }}>
-        PREVIEW:
-      </Heading>
-      <Card
-        background="tint1"
-        padding="1rem"
-        elevation={0}
-        width="100%"
-      >
-        {matchesSplits.map((text: string, i: number) => {
-          const isMatch = i % 2 && i !== matchesSplits.length - 1
-          // const appearance = !isMatch ? 'minimal' : undefined
-
-          if (isMatch) {
-            return <Code key={i} size={300} appearance="default" margin={0} borderWidth={0} paddingLeft=".3rem" paddingRight=".3rem">
-              {text}
-            </Code>
-          } else {
-            return <Code key={i} size={300} backgroundColor="transparent" borderWidth={0} margin={0} padding={0} boxShadow="0">
-              {text}
-            </Code>
-          }
-        })}
-      </Card>
-      {matches && (
-        <Pane width="100%" paddingY="1rem" style={{ whiteSpace: 'pre' }}>
-          <Heading size={100} style={{ lineHeight: '1.5rem' }}>
-            MATCHES:
-          </Heading>
-          {!matchesLen && (
-            <Card paddingY="5rem" textAlign="center">
-              <Heading size={100} opacity={.7}>
-                NO MATCHES
-              </Heading>
-            </Card>
+    <div className="w-full">
+      {props.matches && (
+        <div className="mx-5">
+          <p className="mb-1 text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+            {matches.format({ len })}:
+          </p>
+          {len === 0 && (
+            <div className="w-full rounded bg-slate-100 px-4 py-2 font-mono text-sm text-gray-600 shadow ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
+              <code>NO MATCHES</code>
+            </div>
           )}
-          {!!matchesLen &&
-            matches.map((match, i) => {
+          {len > 0 &&
+            props.matches.map((match, i) => {
               return (
-                <Card
-                  key={'match::' + i}
-                  background="tint1"
-                  padding="1rem"
-                  elevation={0}
-                  width="100%"
-                  marginBottom="1rem"
-                >
+                <div className="mb-4 w-full rounded bg-slate-100 px-4 py-2 font-mono text-sm text-gray-600 shadow ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
                   <pre>
-                    <Struct value={{
-                      '@name': 'regex::Match',
-                      '@type': 'struct',
-                      start: match.start,
-                      end: match.end,
-                      'as_str()': match.value
-                    }} version={version ? 'regex/' + version : 'regex/latest'} />
+                    <Struct
+                      value={{
+                        '@name': 'regex::Match',
+                        '@type': 'struct',
+                        start: match.start,
+                        end: match.end,
+                        'as_str()': match.value,
+                      }}
+                      version={
+                        props.version
+                          ? 'regex/' + props.version
+                          : 'regex/latest'
+                      }
+                    />
                   </pre>
-                </Card>
+                </div>
               )
             })}
-        </Pane>
+        </div>
       )}
-    </Pane>
+    </div>
   )
 }

@@ -1,23 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Redux regex playground</title>
-    <script async type="module" src="./src/index.tsx"></script>
     <link
       href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
-      integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU="
-      crossorigin="anonymous"
-    />
+    <link href="./src/index.css" rel="stylesheet" />
+    <script async type="module" src="./src/index.tsx"></script>
   </head>
   <body>
     <div id="root"></div>
+    <script async>
+      const isDark = localStorage.getItem('dark')
+      if (!isDark) {
+        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
+        if (darkThemeMq.matches) {
+          document.body.parentElement?.classList.add('dark')
+          localStorage.setItem('dark', 'true')
+        } else {
+          localStorage.setItem('dark', 'false')
+        }
+      } else if (isDark === 'true') {
+        document.body.parentElement?.classList.add('dark')
+      }
+    </script>
   </body>
 </html>
