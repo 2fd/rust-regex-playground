@@ -1,6 +1,6 @@
 import React from 'react'
-import Textarea, { TextareaProps } from '../Form/Textarea.js'
-import { Match, splitFromMatch } from '../../rregex.js'
+import Textarea, { TextareaProps } from '../Form/Textarea.tsx'
+import { Match, splitFromMatch } from '../../rregex.ts'
 
 export type InputProps = TextareaProps &
   Partial<{
@@ -31,23 +31,19 @@ export default React.memo(function Input({
         </label>
       )}
       <div
-        className={`relative rounded ${
-          error ? 'bg-red-50' : 'bg-white dark:bg-gray-600'
-        } font-mono text-sm shadow ring-1 ${
-          error ? 'ring-red-600' : 'ring-gray-300 dark:ring-gray-700'
-        }`}
+        className={`relative rounded ${error ? 'bg-red-50' : 'bg-white dark:bg-gray-600'
+          } font-mono text-sm shadow ring-1 ${error ? 'ring-red-600' : 'ring-gray-300 dark:ring-gray-700'
+          }`}
       >
         <div
-          className={`absolute left-0 top-0 block px-2 py-2 ${
-            error ? 'text-red-400' : 'text-gray-400'
-          }`}
+          className={`absolute left-0 top-0 block px-2 py-2 ${error ? 'text-red-400' : 'text-gray-400'
+            }`}
         >
           r"
         </div>
         <div
-          className={`absolute right-0 top-0 block px-2 py-2 ${
-            error ? 'text-red-400' : 'text-gray-400'
-          }`}
+          className={`absolute right-0 top-0 block px-2 py-2 ${error ? 'text-red-400' : 'text-gray-400'
+            }`}
         >
           "
         </div>
@@ -70,9 +66,8 @@ export default React.memo(function Input({
         </pre>
         <Textarea
           {...props}
-          className={`relative m-0 block w-full resize-none border-0 bg-transparent py-2 pl-6 pr-4 ${
-            error ? 'text-red-400' : 'text-gray-600 dark:text-gray-100'
-          } shadow-sm ring-0`}
+          className={`relative m-0 block w-full resize-none border-0 bg-transparent py-2 pl-6 pr-4 ${error ? 'text-red-400' : 'text-gray-600 dark:text-gray-100'
+            } shadow-sm ring-0`}
         />
       </div>
     </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { IntlMessageFormat } from 'intl-messageformat'
-import { Struct } from './Types.js'
-import type { Match } from '../../rregex.js'
+import { Struct } from './Types.tsx'
+import type { Match } from '../../rregex.ts'
 
 export type ViewMatchProps = {
   value: string

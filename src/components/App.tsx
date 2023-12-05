@@ -6,17 +6,17 @@ import {
   Hir,
   isRRegexVersion,
   RRegexVersion,
-} from '../rregex.js'
-import Navbar from './Layout/Navbar.js'
-import Loading from './Icon/Loading.js'
-import Alert from './Layout/Alert.js'
-import Input from './Layout/Input.js'
-import ViewMatch from './Rust/ViewMatch.js'
-import ViewReplace from './Rust/ViewReplace.js'
-import ViewSyntax from './Rust/ViewSyntax.js'
-import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.js'
-import Rust from './Icon/Rust.js'
-import Github from './Icon/Github.js'
+} from '../rregex.ts'
+import Navbar from './Layout/Navbar.tsx'
+import Loading from './Icon/Loading.tsx'
+import Alert from './Layout/Alert.tsx'
+import Input from './Layout/Input.tsx'
+import ViewMatch from './Rust/ViewMatch.tsx'
+import ViewReplace from './Rust/ViewReplace.tsx'
+import ViewSyntax from './Rust/ViewSyntax.tsx'
+import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
+import Rust from './Icon/Rust.tsx'
+import Github from './Icon/Github.tsx'
 
 const enum Method {
   Find = 'find',

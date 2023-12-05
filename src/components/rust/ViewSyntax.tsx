@@ -1,6 +1,6 @@
 import React from 'react'
-import { Struct } from './Types.js'
-import { Hir } from '../../rregex.js'
+import { Struct } from './Types.tsx'
+import { Hir } from '../../rregex.ts'
 
 export type ViewSyntaxProps = {
   value: Hir
