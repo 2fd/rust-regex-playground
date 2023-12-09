@@ -12,15 +12,15 @@ function href(type: string, name: string, mod: string) {
 
 type RustTypeProps = {
   value:
-    | string
-    | number
-    | boolean
-    | any[]
-    | {
-        '@type': string
-        '@name': string
-        [key: string]: any
-      }
+  | string
+  | number
+  | boolean
+  | any[]
+  | {
+    '@type': string
+    '@name': string
+    [key: string]: any
+  }
   spaces?: number
   version?: string
 }
@@ -34,7 +34,21 @@ export const Type = React.memo(function (props: RustTypeProps) {
     case 'number':
       return <Primitive value={value} />
     case 'object':
-      if (Array.isArray(value)) {
+      if (ArrayBuffer.isView(value)) {
+        let t = unit(value)
+        return <span>
+          <span>{'\n' + ' '.repeat(spaces + 2)}</span>
+          {t && <span className="text-gray-300 dark:text-gray-500">{`[${t}; ${value.length}] `}</span>}
+          <span>{'['}</span>
+          {Array.from(value.values(), (value: number, i: number) => {
+            return <>
+              {i !== 0 && ', '}
+              <Byte value={value} />
+            </>
+          })}
+          <span>{']\n' + ' '.repeat(spaces)}</span>
+        </span>
+      } else if (Array.isArray(value)) {
         return (
           <span>
             <span>{'[\n'}</span>
@@ -88,7 +102,7 @@ type RustStructProps = {
 
 export const Struct = React.memo(function (props: RustStructProps) {
   const spaces = props.spaces || 0
-  const { '@type': type, '@name': name, ...values } = props.value
+  const { '@type': type, '@name': name, '@values': values, ...properties } = props.value
   return (
     <span className="text-gray-600 dark:text-gray-100">
       <a
@@ -98,24 +112,35 @@ export const Struct = React.memo(function (props: RustStructProps) {
       >
         {name.split('::').slice(-1).join('')}
       </a>
-      <span className="text-cyan-600 dark:text-cyan-400">{' {\n'}</span>
-      {Object.keys(values).map((key) => {
+      {!!values && <span className="text-cyan-600 dark:text-cyan-400">{'('}</span>}
+      {!!values &&
+        Array.isArray(values) &&
+        values.map((value, i, values) => {
+          return (
+            <React.Fragment key={i}>
+              <Type value={value} spaces={spaces} version={props.version} />
+              {i !== values.length - 1 && ', '}
+            </React.Fragment>
+          )
+        })}
+      {!!values && <span className="text-cyan-600 dark:text-cyan-400">{')'}</span>}
+      {!values && <span className="text-cyan-600 dark:text-cyan-400">{' {\n'}</span>}
+      {!values && Object.keys(properties).map((key) => {
         return (
           <span key={key}>
             {' '.repeat(spaces + 2) + key + ': '}
             <Type
-              value={values[key]}
+              value={properties[key]}
               spaces={spaces + 2}
               version={props.version}
             />
             {'\n'}
-            {/* {props.children} */}
           </span>
         )
       })}
-      <span className="text-cyan-600 dark:text-cyan-400">
+      {!values && <span className="text-cyan-600 dark:text-cyan-400">
         {' '.repeat(spaces) + '}'}
-      </span>
+      </span>}
     </span>
   )
 })
@@ -211,24 +236,43 @@ export const Enum = React.memo(function ({
   )
 })
 
+export function Byte({ value }: { value: number }) {
+  const code = ('0000' + String(value)).slice(-4)
+  return <>
+    <span className="text-emerald-600 dark:text-emerald-400">
+      '{String.fromCharCode(value)}'
+    </span>
+    <a
+      className="ml-1 text-gray-400 hover:underline"
+      target="_blank"
+      href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
+    >
+      {'\\u'}
+      {code}
+    </a>
+  </>
+}
+
+export function Char({ value }: { value: string }) {
+  const code = ('0000' + String(value).charCodeAt(0).toString(16)).slice(-4)
+  return <>
+    <span className="text-emerald-600 dark:text-emerald-400">
+      '{value}'
+    </span>
+    <a
+      className="ml-1 text-gray-400 hover:underline"
+      target="_blank"
+      href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
+    >
+      {'\\u'}
+      {code}
+    </a>
+  </>
+}
+
 export function Primitive({ value }: { value?: string | number | boolean }) {
   if (typeof value === 'string' && value.length === 1) {
-    const code = ('0000' + String(value).charCodeAt(0).toString(16)).slice(-4)
-    return (
-      <>
-        <span className="text-emerald-600 dark:text-emerald-400">
-          '{value}'
-        </span>
-        <a
-          className="ml-1 text-gray-400 hover:underline"
-          target="_blank"
-          href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
-        >
-          {'\\u'}
-          {code}
-        </a>
-      </>
-    )
+    return <Char value={value} />
   } else if (typeof value === 'string') {
     return (
       <span className="text-emerald-600 dark:text-emerald-400">'{value}'</span>
@@ -247,5 +291,21 @@ export function Primitive({ value }: { value?: string | number | boolean }) {
     )
   } else {
     return null
+  }
+}
+
+export function unit(value: any) {
+  switch (Object.prototype.toString.call(value)) {
+    case '[object Int8Array]': return 'i8'
+    case '[object Uint8Array]': return 'u8'
+    case '[object Int16Array]': return 'i16'
+    case '[object Uint16Array]': return 'u16'
+    case '[object Int32Array]': return 'i32'
+    case '[object Uint32Array]': return 'u32'
+    case '[object Int64Array]': return 'i64'
+    case '[object Uint64Array]': return 'u64'
+    case '[object Float32Array]': return 'f32'
+    case '[object Float64Array]': return 'f64'
+    default: return null
   }
 }

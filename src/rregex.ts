@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import type * as rregex from 'rregex1.7'
+import type * as rregex from 'rregex1.8'
 import { memo } from 'radash'
 
 export const VERSIONS = {
+  '1.8': import('rregex1.8'),
   '1.7': import('rregex1.7'),
   '1.6': import('rregex1.6'),
   '1.5': import('rregex1.5'),
@@ -14,6 +15,8 @@ export const VERSIONS = {
 } as const
 
 export type RRegexVersion = keyof typeof VERSIONS
+export const DEFAULT_VERSION: RRegexVersion = '1.8'
+
 export type Hir = rregex.Hir
 export type Match = rregex.Match
 export type RRegex = rregex.RRegex

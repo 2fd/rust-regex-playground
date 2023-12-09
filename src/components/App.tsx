@@ -7,6 +7,7 @@ import {
   Hir,
   isRRegexVersion,
   RRegexVersion,
+  DEFAULT_VERSION,
 } from '../rregex.ts'
 import Navbar from './Layout/Navbar.tsx'
 import Alert from './Layout/Alert.tsx'
@@ -35,7 +36,7 @@ export function getOperation(value: string | null | undefined): Method {
 
 export function getVersion(
   version: string | null | undefined,
-  defaultVersion: RRegexVersion = '1.7'
+  defaultVersion: RRegexVersion = DEFAULT_VERSION
 ): RRegexVersion {
   return isRRegexVersion(version) ? version : defaultVersion
 }
