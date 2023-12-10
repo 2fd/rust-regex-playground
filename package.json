@@ -34,8 +34,9 @@
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "intl-messageformat": "^10.5.8",
-    "preact": "^10.19.2",
     "radash": "^11.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "rregex1.0": "npm:rregex@1.0",
     "rregex1.1": "npm:rregex@1.1",
     "rregex1.2": "npm:rregex@1.2",
@@ -45,11 +46,5 @@
     "rregex1.6": "npm:rregex@1.6",
     "rregex1.7": "npm:rregex@1.7",
     "rregex1.8": "npm:rregex@1.8"
-  },
-  "alias": {
-    "react": "preact/compat",
-    "react-dom/test-utils": "preact/test-utils",
-    "react-dom": "preact/compat",
-    "react/jsx-runtime": "preact/jsx-runtime"
   }
 }
