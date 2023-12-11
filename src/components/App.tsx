@@ -236,11 +236,13 @@ export default function App() {
               DOCUMENTATION
             </p>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm  font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexDocs(rregex?.metadata['regex'])}
               target="_blank"
             >
-              <div>REGEX</div>
+              <div>
+                REGEX {rregex?.metadata['regex'] && <span className="opacity-50 text-xs">{` (${rregex?.metadata['regex']})`}</span>}
+              </div>
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
             <a
@@ -248,7 +250,10 @@ export default function App() {
               href={getRustRegexSyntaxDocs(rregex?.metadata['regex-syntax'])}
               target="_blank"
             >
-              <div>REGEX-SYNTAX</div>
+              <div>
+                REGEX-SYNTAX
+                {rregex?.metadata['regex-syntax'] && <span className="opacity-50  text-xs">{` (${rregex?.metadata['regex-syntax']})`}</span>}
+              </div>
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
             <a
@@ -257,7 +262,7 @@ export default function App() {
               target="_blank"
             >
               <div>
-                RRegex<span className="opacity-50">.js</span>
+                RRegex<span className="opacity-50 text-xs">.js</span>
               </div>
               <Github width="1em" height="1em" className="block text-lg" />
             </a>
