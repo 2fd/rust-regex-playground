@@ -12,15 +12,15 @@ function href(type: string, name: string, mod: string) {
 
 type RustTypeProps = {
   value:
-    | string
-    | number
-    | boolean
-    | any[]
-    | {
-        '@type': string
-        '@name': string
-        [key: string]: any
-      }
+  | string
+  | number
+  | boolean
+  | any[]
+  | {
+    '@type': string
+    '@name': string
+    [key: string]: any
+  }
   spaces?: number
   version?: string
 }
@@ -31,10 +31,14 @@ export const Type = React.memo(function (props: RustTypeProps) {
   switch (typeof value) {
     case 'string':
     case 'boolean':
+    case 'undefined':
     case 'number':
       return <Primitive value={value} />
     case 'object':
-      if (ArrayBuffer.isView(value)) {
+      if (value === null) {
+        return <Primitive value={value} />
+
+      } else if (ArrayBuffer.isView(value)) {
         let t = unit(value)
         return (
           <span>
@@ -309,6 +313,12 @@ export function Primitive({ value }: { value?: string | number | boolean }) {
     return (
       <span title="boolean" className="text-emerald-600 dark:text-emerald-400">
         {value ? 'true' : 'false'}
+      </span>
+    )
+  } else if (value === undefined || value === null) {
+    return (
+      <span title="None" className="text-gray-400">
+        {'None'}
       </span>
     )
   } else {
