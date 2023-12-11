@@ -13,7 +13,29 @@
     <script async type="module" src="./src/index.tsx"></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <header
+        class="absolute left-0 top-0 mx-auto flex w-full justify-between border-b border-b-neutral-200 bg-white shadow-md dark:border-b-neutral-600 dark:bg-neutral-800"
+      >
+        <div class="relative px-4 py-4">
+          <h1 class="text-base font-medium text-neutral-900 dark:text-white">
+            RUST REGEX PLAYGROUND
+          </h1>
+        </div>
+        <div class="relative px-4 py-4"></div>
+      </header>
+      <main class="flex">
+        <section
+          class="min-h-screen w-1/6 flex-auto border-r border-r-neutral-300 bg-slate-200 pt-28 dark:border-r-neutral-500 dark:bg-neutral-900"
+        ></section>
+        <section
+          class="min-h-screen w-3/6 border-r border-r-neutral-300 bg-slate-100 pt-24 dark:border-r-neutral-500 dark:bg-neutral-800"
+        ></section>
+        <section
+          class="min-h-screen w-2/6 flex-auto bg-white pt-24 dark:bg-neutral-700"
+        ></section>
+      </main>
+    </div>
     <script async>
       const isDark = localStorage.getItem('dark')
       if (!isDark) {
