@@ -12,15 +12,15 @@ function href(type: string, name: string, mod: string) {
 
 type RustTypeProps = {
   value:
-  | string
-  | number
-  | boolean
-  | any[]
-  | {
-    '@type': string
-    '@name': string
-    [key: string]: any
-  }
+    | string
+    | number
+    | boolean
+    | any[]
+    | {
+        '@type': string
+        '@name': string
+        [key: string]: any
+      }
   spaces?: number
   version?: string
 }
@@ -37,7 +37,6 @@ export const Type = React.memo(function (props: RustTypeProps) {
     case 'object':
       if (value === null) {
         return <Primitive value={value} />
-
       } else if (ArrayBuffer.isView(value)) {
         let t = unit(value)
         return (
