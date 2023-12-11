@@ -241,7 +241,10 @@ export default function App() {
               target="_blank"
             >
               <div>
-                REGEX {rregex?.metadata['regex'] && <span className="opacity-50 text-xs">{` (${rregex?.metadata['regex']})`}</span>}
+                REGEX{' '}
+                {rregex?.metadata['regex'] && (
+                  <span className="text-xs opacity-50">{` (${rregex?.metadata['regex']})`}</span>
+                )}
               </div>
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
@@ -252,7 +255,9 @@ export default function App() {
             >
               <div>
                 REGEX-SYNTAX
-                {rregex?.metadata['regex-syntax'] && <span className="opacity-50  text-xs">{` (${rregex?.metadata['regex-syntax']})`}</span>}
+                {rregex?.metadata['regex-syntax'] && (
+                  <span className="text-xs  opacity-50">{` (${rregex?.metadata['regex-syntax']})`}</span>
+                )}
               </div>
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
@@ -262,7 +267,7 @@ export default function App() {
               target="_blank"
             >
               <div>
-                RRegex<span className="opacity-50 text-xs">.js</span>
+                RRegex<span className="text-xs opacity-50">.js</span>
               </div>
               <Github width="1em" height="1em" className="block text-lg" />
             </a>
