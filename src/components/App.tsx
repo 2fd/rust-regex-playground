@@ -8,16 +8,18 @@ import {
   isRRegexVersion,
   RRegexVersion,
   DEFAULT_VERSION,
+  Captures,
 } from '../rregex.ts'
 import Navbar from './Layout/Navbar.tsx'
 import Alert from './Layout/Alert.tsx'
-import Input from './Layout/Input.tsx'
+import Input from './Form/Input.tsx'
 import ViewMatch from './Rust/ViewMatch.tsx'
 import ViewReplace from './Rust/ViewReplace.tsx'
 import ViewSyntax from './Rust/ViewSyntax.tsx'
 import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
 import Rust from './Icon/Rust.tsx'
 import Github from './Icon/Github.tsx'
+import { RRegex } from 'rregex1.8'
 
 const enum Method {
   Find = 'find',
@@ -47,7 +49,15 @@ export function executeMethod(Regex: any, state: AppState) {
   }
 
   try {
-    const rregex = new Regex(state.regex)
+    const rregex = new Regex(state.regex) as RRegex
+    let shortcuts = undefined
+    if (rregex.capturesLength as any) {
+      shortcuts = [
+        ...rregex.captureNames().map((name) => `$${name}`),
+        ...Array.from(Array(rregex.capturesLength()), (_, i) => `$${i}`),
+      ]
+    }
+
     switch (state.method) {
       case Method.Find:
         return {
@@ -55,6 +65,7 @@ export function executeMethod(Regex: any, state: AppState) {
           error: undefined,
           match: rregex.findAll(state.text),
           syntax: rregex.syntax(),
+          shortcuts,
           result: undefined,
         }
       case Method.Replace:
@@ -63,6 +74,7 @@ export function executeMethod(Regex: any, state: AppState) {
           error: undefined,
           match: rregex.findAll(state.text),
           syntax: rregex.syntax(),
+          shortcuts,
           result: rregex.replaceAll(state.text, state.replace),
         }
       default:
@@ -102,7 +114,9 @@ type AppMethodState = {
   method: Method
   result: string | undefined
   match: Match[] | undefined
+  captures: Captures[] | undefined
   syntax: Hir | undefined
+  shortcuts: string[] | undefined
   error: string | undefined
 }
 
@@ -288,6 +302,7 @@ export default function App() {
               rows={1}
               name="replace"
               value={state.replace}
+              shortcuts={state.shortcuts}
               onChange={handleChange}
             />
           )}

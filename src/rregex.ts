@@ -19,6 +19,7 @@ export const DEFAULT_VERSION: RRegexVersion = '1.8'
 
 export type Hir = rregex.Hir
 export type Match = rregex.Match
+export type Captures = rregex.Captures
 export type RRegex = rregex.RRegex
 
 export const isRRegexVersion = (
