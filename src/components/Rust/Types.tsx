@@ -48,10 +48,10 @@ export const Type = React.memo(function (props: RustTypeProps) {
             <span>{'['}</span>
             {Array.from(value.values(), (value: number, i: number) => {
               return (
-                <>
+                <React.Fragment key={i}>
                   {i !== 0 && ', '}
                   <Byte value={value} />
-                </>
+                </React.Fragment>
               )
             })}
             <span>{']\n' + ' '.repeat(spaces)}</span>
@@ -300,7 +300,7 @@ export function Primitive({ value }: { value?: string | number | boolean }) {
     return <Char value={value} />
   } else if (typeof value === 'string') {
     return (
-      <span className="text-emerald-600 dark:text-emerald-400">'{value}'</span>
+      <span className="text-emerald-600 dark:text-emerald-400">"{value}"</span>
     )
   } else if (typeof value === 'number' && Number.isFinite(value)) {
     return (
