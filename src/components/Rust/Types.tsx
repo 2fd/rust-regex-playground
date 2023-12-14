@@ -1,6 +1,6 @@
 import React from 'react'
 
-function href(type: string, name: string, mod: string) {
+export function href(type: string, name: string, mod: string) {
   const sections = name.split('::')
   const prefix = sections.slice(0, -1).join('/')
   const Name = sections.slice(-1).join('')
@@ -50,7 +50,7 @@ export const Type = React.memo(function (props: RustTypeProps) {
               return (
                 <React.Fragment key={i}>
                   {i !== 0 && ', '}
-                  <Byte value={value} />
+                  <Primitive.Byte value={value} />
                 </React.Fragment>
               )
             })}
@@ -62,7 +62,7 @@ export const Type = React.memo(function (props: RustTypeProps) {
           <span>
             <span>{'[\n'}</span>
             {value.map((value, i) => (
-              <>
+              <React.Fragment key={i}>
                 {i !== 0 && ',\n'}
                 {' '.repeat(spaces + 2)}
                 <Type
@@ -70,7 +70,7 @@ export const Type = React.memo(function (props: RustTypeProps) {
                   spaces={spaces + 2}
                   version={props.version}
                 />
-              </>
+              </React.Fragment>
             ))}
             <span>{'\n' + ' '.repeat(spaces) + ']'}</span>
           </span>
@@ -179,24 +179,6 @@ type RustEnumProps = {
   version?: string
 }
 
-const EnumName = React.memo(function (props: {
-  type: string
-  name: string
-  variant: string
-  version?: string
-}) {
-  return (
-    <a
-      className="text-yellow-600 hover:underline dark:text-yellow-400"
-      href={href(props.type, props.name, props.version || 'latest')}
-    >
-      {props.name.split('::').slice(-1).join('')}
-      {'::'}
-      {props.variant}
-    </a>
-  )
-})
-
 export const Enum = React.memo(function ({
   children,
   ...props
@@ -212,12 +194,14 @@ export const Enum = React.memo(function ({
   const keys = Object.keys(properties)
   return (
     <>
-      <EnumName
-        type={type}
-        name={name}
-        variant={variant}
-        version={props.version}
-      />
+      <a
+        className="text-yellow-600 hover:underline dark:text-yellow-400"
+        href={href(type, name, props.version || 'latest')}
+      >
+        {name.split('::').slice(-1).join('')}
+        {'::'}
+        {variant}
+      </a>
       {!!values && (
         <span className="text-yellow-600 dark:text-yellow-400">{'('}</span>
       )}
@@ -259,71 +243,92 @@ export const Enum = React.memo(function ({
   )
 })
 
-export function Byte({ value }: { value: number }) {
-  const code = ('0000' + String(value)).slice(-4)
-  return (
-    <>
-      <span className="text-emerald-600 dark:text-emerald-400">
-        '{String.fromCharCode(value)}'
-      </span>
-      <a
-        className="ml-1 text-gray-400 hover:underline"
-        target="_blank"
-        href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
-      >
-        {'\\u'}
-        {code}
-      </a>
-    </>
-  )
-}
-
-export function Char({ value }: { value: string }) {
-  const code = ('0000' + String(value).charCodeAt(0).toString(16)).slice(-4)
-  return (
-    <>
-      <span className="text-emerald-600 dark:text-emerald-400">'{value}'</span>
-      <a
-        className="ml-1 text-gray-400 hover:underline"
-        target="_blank"
-        href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
-      >
-        {'\\u'}
-        {code}
-      </a>
-    </>
-  )
-}
-
-export function Primitive({ value }: { value?: string | number | boolean }) {
-  if (typeof value === 'string' && value.length === 1) {
-    return <Char value={value} />
-  } else if (typeof value === 'string') {
-    return (
-      <span className="text-emerald-600 dark:text-emerald-400">"{value}"</span>
-    )
-  } else if (typeof value === 'number' && Number.isFinite(value)) {
-    return (
-      <span className="text-emerald-600 dark:text-emerald-400">
-        {String(value)}
-      </span>
-    )
-  } else if (typeof value === 'boolean') {
-    return (
-      <span title="boolean" className="text-emerald-600 dark:text-emerald-400">
-        {value ? 'true' : 'false'}
-      </span>
-    )
-  } else if (value === undefined || value === null) {
-    return (
-      <span title="None" className="text-gray-400">
-        {'None'}
-      </span>
-    )
-  } else {
-    return null
+export const Primitive = Object.assign(
+  function ({ value }: { value?: string | number | boolean }) {
+    if (typeof value === 'string' && value.length === 1) {
+      return <Primitive.Char value={value} />
+    } else if (typeof value === 'string') {
+      return <Primitive.String value={value} />
+    } else if (typeof value === 'number' && Number.isFinite(value)) {
+      return <Primitive.Number value={value} />
+    } else if (typeof value === 'boolean') {
+      return <Primitive.Boolean value={value} />
+    } else if (value === undefined || value === null) {
+      return <Primitive.None />
+    } else {
+      return null
+    }
+  },
+  {
+    Byte: ({ value }: { value: number }) => {
+      const code = ('0000' + String(value)).slice(-4)
+      return (
+        <>
+          <span className="text-emerald-600 dark:text-emerald-400">
+            '{String.fromCharCode(value)}'
+          </span>
+          <a
+            className="ml-1 text-gray-400 hover:underline"
+            target="_blank"
+            href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
+          >
+            {'\\u'}
+            {code}
+          </a>
+        </>
+      )
+    },
+    Char: ({ value }: { value: string }) => {
+      const code = ('0000' + String(value).charCodeAt(0).toString(16)).slice(-4)
+      return (
+        <>
+          <span className="text-emerald-600 dark:text-emerald-400">
+            '{value}'
+          </span>
+          <a
+            className="ml-1 text-gray-400 hover:underline"
+            target="_blank"
+            href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
+          >
+            {'\\u'}
+            {code}
+          </a>
+        </>
+      )
+    },
+    String: ({ value }: { value: string }) => {
+      return (
+        <span className="text-emerald-600 dark:text-emerald-400">
+          "{value}"
+        </span>
+      )
+    },
+    Number: ({ value }: { value: number }) => {
+      return (
+        <span className="text-emerald-600 dark:text-emerald-400">
+          {String(value)}
+        </span>
+      )
+    },
+    Boolean: ({ value }: { value: boolean }) => {
+      return (
+        <span
+          title="boolean"
+          className="text-emerald-600 dark:text-emerald-400"
+        >
+          {value ? 'true' : 'false'}
+        </span>
+      )
+    },
+    None: () => {
+      return (
+        <span title="None" className="text-gray-400">
+          None
+        </span>
+      )
+    },
   }
-}
+)
 
 export function unit(value: any) {
   switch (Object.prototype.toString.call(value)) {
@@ -350,4 +355,10 @@ export function unit(value: any) {
     default:
       return null
   }
+}
+
+export function Divider() {
+  return (
+    <span className="mx-1 inline-block h-4 border-l border-l-black align-middle opacity-20 dark:border-l-white" />
+  )
 }

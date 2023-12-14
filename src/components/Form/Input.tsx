@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import { Match, splitFromMatch } from '../../rregex.ts'
+import { Divider } from '../Rust/Types.tsx'
 
 export type InputProps = React.HTMLProps<HTMLTextAreaElement> &
   Partial<{
@@ -151,9 +152,7 @@ export default React.memo(function Input({
             {shortcuts.map((shortcut, i) => {
               return (
                 <React.Fragment key={shortcut}>
-                  {i !== 0 && (
-                    <span className="mx-1 inline-block h-4 border-l border-l-black align-middle opacity-20 dark:border-l-white" />
-                  )}
+                  {i !== 0 && <Divider />}
                   <a
                     className="relative inline-block cursor-pointer rounded-sm bg-transparent px-2 py-0.5 hover:bg-neutral-200 hover:dark:bg-gray-800"
                     data-value={shortcut}

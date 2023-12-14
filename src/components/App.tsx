@@ -13,13 +13,12 @@ import {
 import Navbar from './Layout/Navbar.tsx'
 import Alert from './Layout/Alert.tsx'
 import Input from './Form/Input.tsx'
-import ViewMatch from './Rust/ViewMatch.tsx'
-import ViewReplace from './Rust/ViewReplace.tsx'
 import ViewSyntax from './Rust/ViewSyntax.tsx'
 import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
 import Rust from './Icon/Rust.tsx'
 import Github from './Icon/Github.tsx'
 import { RRegex } from 'rregex1.8'
+import { ViewMatch, ViewReplace, ViewCaptures } from './Rust/ViewResult.tsx'
 
 const enum Method {
   Find = 'find',
@@ -43,7 +42,7 @@ export function getVersion(
   return isRRegexVersion(version) ? version : defaultVersion
 }
 
-export function executeMethod(Regex: any, state: AppState) {
+export function executeMethod(Regex: any, state: AppState): AppState {
   if (!Regex) {
     return state
   }
@@ -63,8 +62,9 @@ export function executeMethod(Regex: any, state: AppState) {
         return {
           ...state,
           error: undefined,
-          match: rregex.findAll(state.text),
           syntax: rregex.syntax(),
+          matches: rregex.findAll(state.text),
+          captures: rregex.capturesAll && rregex.capturesAll(state.text),
           shortcuts,
           result: undefined,
         }
@@ -72,8 +72,9 @@ export function executeMethod(Regex: any, state: AppState) {
         return {
           ...state,
           error: undefined,
-          match: rregex.findAll(state.text),
           syntax: rregex.syntax(),
+          matches: rregex.findAll(state.text),
+          captures: rregex.capturesAll && rregex.capturesAll(state.text),
           shortcuts,
           result: rregex.replaceAll(state.text, state.replace),
         }
@@ -113,7 +114,7 @@ export function setQueryString(state: AppState) {
 type AppMethodState = {
   method: Method
   result: string | undefined
-  match: Match[] | undefined
+  matches: Match[] | undefined
   captures: Captures[] | undefined
   syntax: Hir | undefined
   shortcuts: string[] | undefined
@@ -199,10 +200,7 @@ export default function App() {
 
   return (
     <>
-      <Navbar
-        rustRegexVersion={rregex?.metadata.regex}
-        rustRegexSyntaxVersion={rregex?.metadata['regex-syntax']}
-      />
+      <Navbar />
       <main className="flex">
         <section className="min-h-screen w-1/6 flex-auto border-r border-r-neutral-300 bg-slate-200 pt-28 dark:border-r-neutral-500 dark:bg-neutral-900">
           <div className="mx-5">
@@ -311,7 +309,7 @@ export default function App() {
             rows={5}
             name="text"
             value={state.text}
-            matches={state.match}
+            matches={state.matches}
             onChange={handleChange}
           />
           {!!rregex && !state.error && state.syntax && (
@@ -342,14 +340,23 @@ export default function App() {
             </div>
           )}
           {!!rregex && !state.error && state.method === Method.Replace && (
-            <div className="pb-8">
+            <div className="pb-6">
               <ViewReplace value={state.result} />
             </div>
           )}
-          {!!rregex && !state.error && state.match && (
-            <div className="pb-8">
+          {!!rregex && !state.error && state.matches && (
+            <div className="pb-6">
               <ViewMatch
-                matches={state.match}
+                matches={state.matches}
+                value={state.text}
+                version={rregex.metadata.regex}
+              />
+            </div>
+          )}
+          {!!rregex && !state.error && state.captures && (
+            <div className="pb-6">
+              <ViewCaptures
+                captures={state.captures}
                 value={state.text}
                 version={rregex.metadata.regex}
               />
