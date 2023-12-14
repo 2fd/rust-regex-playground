@@ -137,7 +137,7 @@ export default React.memo(function Input({
         <textarea
           {...props}
           className={`relative m-0 block w-full resize-none border-0 bg-transparent py-2 pl-6 pr-4 ${
-            error ? 'text-red-400' : 'text-gray-600 dark:text-gray-100'
+            error ? 'text-red-700' : 'text-gray-600 dark:text-gray-100'
           } ring-0`}
           ref={ref}
         />
@@ -145,7 +145,7 @@ export default React.memo(function Input({
           <div
             className={`rounded-b border-t border-black border-opacity-10 py-2 pl-6 pr-4  dark:border-white dark:border-opacity-10 ${
               error
-                ? 'text-red-400'
+                ? 'text-red-700'
                 : 'bg-neutral-50 text-gray-500 dark:bg-gray-700 dark:text-gray-200'
             }`}
           >

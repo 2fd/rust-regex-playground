@@ -329,13 +329,15 @@ export default function App() {
             </div>
           )}
           {!!rregex && state.error && (
-            <div className="flex justify-center p-20">
+            <div className="pb-6">
               <Alert
                 title={
                   state.error.slice(0, 1).toUpperCase() +
                   state.error.slice(1, state.error.indexOf('\n'))
                 }
-                message={state.error.slice(state.error.indexOf('\n') + 1)}
+                message={state.error
+                  .slice(state.error.indexOf('\n') + 1)
+                  .trim()}
               />
             </div>
           )}
