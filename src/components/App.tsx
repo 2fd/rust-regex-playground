@@ -9,6 +9,7 @@ import {
   RRegexVersion,
   DEFAULT_VERSION,
   Captures,
+  RRegex,
 } from '../rregex.ts'
 import Navbar from './Layout/Navbar.tsx'
 import Alert from './Layout/Alert.tsx'
@@ -17,7 +18,6 @@ import ViewSyntax from './Rust/ViewSyntax.tsx'
 import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
 import Rust from './Icon/Rust.tsx'
 import Github from './Icon/Github.tsx'
-import { RRegex } from 'rregex1.8'
 import { ViewMatch, ViewReplace, ViewCaptures } from './Rust/ViewResult.tsx'
 
 const enum Method {
@@ -49,13 +49,11 @@ export function executeMethod(Regex: any, state: AppState): AppState {
 
   try {
     const rregex = new Regex(state.regex) as RRegex
-    let shortcuts = undefined
-    if (rregex.capturesLength as any) {
-      shortcuts = [
-        ...rregex.captureNames().map((name) => `$${name}`),
-        ...Array.from(Array(rregex.capturesLength()), (_, i) => `$${i}`),
-      ]
-    }
+    let shortcuts = (rregex.captureNames as any)
+      ? rregex
+          .captureNames()
+          .flatMap((name, i) => (name ? ['$' + name, '$' + i] : ['$' + i]))
+      : undefined
 
     switch (state.method) {
       case Method.Find:

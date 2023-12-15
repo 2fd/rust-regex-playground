@@ -11,6 +11,8 @@
       "ES2015",
       "ES2016",
       "ES2017",
+      "ES2018",
+      "ES2019",
       "dom"
     ] /* Specify library files to be included in the compilation. */,
     "allowJs": true /* Allow javascript files to be compiled. */,
