@@ -341,12 +341,15 @@ export default function App() {
               />
             </div>
           )}
-          {!!rregex && !state.error && state.method === Method.Replace && (
-            <div className="pb-6">
-              <ViewReplace value={state.result} />
-            </div>
-          )}
-          {!!rregex && !state.error && state.matches && (
+          {!!rregex &&
+            !!state.regex &&
+            !state.error &&
+            state.method === Method.Replace && (
+              <div className="pb-6">
+                <ViewReplace value={state.result} />
+              </div>
+            )}
+          {!!rregex && !!state.regex && !state.error && state.matches && (
             <div className="pb-6">
               <ViewMatch
                 matches={state.matches}
@@ -355,7 +358,7 @@ export default function App() {
               />
             </div>
           )}
-          {!!rregex && !state.error && state.captures && (
+          {!!rregex && !!state.regex && !state.error && state.captures && (
             <div className="pb-6">
               <ViewCaptures
                 captures={state.captures}
