@@ -1,8 +1,6 @@
 import React from 'react'
 
-export default React.memo(function Github(
-  props: React.SVGProps<SVGSVGElement>
-) {
+export default React.memo(function Rust(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" {...props}>
       <path
