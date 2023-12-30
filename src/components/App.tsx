@@ -15,10 +15,14 @@ import Navbar from './Layout/Navbar.tsx'
 import Alert from './Layout/Alert.tsx'
 import Input from './Form/Input.tsx'
 import ViewSyntax from './Rust/ViewSyntax.tsx'
-import { getRustRegexDocs, getRustRegexSyntaxDocs } from '../utils.ts'
+import {
+  getRRegexDocs,
+  getRustRegexDocs,
+  getRustRegexSyntaxDocs,
+} from '../utils.ts'
 import Rust from './Icon/Rust.tsx'
-import Github from './Icon/Github.tsx'
 import { ViewMatch, ViewReplace, ViewCaptures } from './Rust/ViewResult.tsx'
+import Typescript from './Icon/Typescript.tsx'
 
 const enum Method {
   Find = 'find',
@@ -246,6 +250,19 @@ export default function App() {
               DOCUMENTATION
             </p>
             <a
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              href={getRRegexDocs(state.version)}
+              target="_blank"
+            >
+              <div>
+                RRegex{' '}
+                {rregex?.metadata['regex'] && (
+                  <span className="text-xs opacity-50">{` (${state.version})`}</span>
+                )}
+              </div>
+              <Typescript width="1em" height="1em" className="block text-lg" />
+            </a>
+            <a
               className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexDocs(rregex?.metadata['regex'])}
               target="_blank"
@@ -270,16 +287,6 @@ export default function App() {
                 )}
               </div>
               <Rust width="1em" height="1em" className="block text-lg" />
-            </a>
-            <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href={'https://github.com/2fd/rregex'}
-              target="_blank"
-            >
-              <div>
-                RRegex<span className="text-xs opacity-50">.js</span>
-              </div>
-              <Github width="1em" height="1em" className="block text-lg" />
             </a>
           </div>
         </section>
