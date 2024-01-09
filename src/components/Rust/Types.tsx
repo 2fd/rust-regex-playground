@@ -261,7 +261,7 @@ export const Primitive = Object.assign(
   },
   {
     Byte: ({ value }: { value: number }) => {
-      const code = ('0000' + String(value)).slice(-4)
+      const code = ('0000' + value.toString(16)).slice(-4)
       return (
         <>
           <span className="text-emerald-600 dark:text-emerald-400">
