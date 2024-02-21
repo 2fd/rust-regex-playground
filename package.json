@@ -37,7 +37,7 @@
   "dependencies": {
     "@heroicons/react": "^2.1.1",
     "intl-messageformat": "^10.5.11",
-    "radash": "^11.0.0",
+    "radash": "^12.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "rregex1.0": "npm:rregex@1.0",
