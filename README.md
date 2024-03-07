@@ -2,18 +2,18 @@
 
 Web tool to evaluate rust regular expressions using [rregex](https://github.com/2fd/rregex)
 
-## Detect parse errors
+## Preview replacement, find, matches
 
-![error](./src/images/error.jpg)
+![find](./src/images/find.jpg)
+
+## Preview named matches
+
+![replace](./src/images/names.jpg)
 
 ## Evaluate syntax
 
 ![syntax](./src/images/syntax.jpg)
 
-## Preview find and matches
+## Detect parse errors
 
-![find](./src/images/find.jpg)
-
-## Preview replace
-
-![replace](./src/images/replace.jpg)
+![error](./src/images/error.jpg)
