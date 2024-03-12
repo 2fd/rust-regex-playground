@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/2fd/rust-regex-playground#readme",
   "devDependencies": {
-    "@types/react": "^18.2.64",
+    "@types/react": "^18.2.65",
     "@types/react-dom": "^18.2.21",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.2",
