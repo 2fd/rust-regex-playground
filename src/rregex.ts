@@ -3,6 +3,7 @@ import type * as rregex from 'rregex1.10'
 import { memo } from 'radash'
 
 export const VERSIONS = {
+  '1.11': import('rregex1.11'),
   '1.10': import('rregex1.10'),
   '1.9': import('rregex1.9'),
   '1.8': import('rregex1.8'),
@@ -17,7 +18,7 @@ export const VERSIONS = {
 } as const
 
 export type RRegexVersion = keyof typeof VERSIONS
-export const DEFAULT_VERSION: RRegexVersion = '1.10'
+export const DEFAULT_VERSION: RRegexVersion = '1.11'
 
 export type Hir = rregex.Hir
 export type Match = rregex.Match

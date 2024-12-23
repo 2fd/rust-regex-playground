@@ -231,6 +231,7 @@ export default function App() {
             {[Method.Find, Method.Replace].map((method) => {
               return (
                 <a
+                  key={method}
                   className={
                     'inline-block w-full cursor-pointer border-r-2 px-2 py-2 text-sm uppercase' +
                     (state.method === method
