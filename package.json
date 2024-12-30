@@ -7,7 +7,7 @@
     "setup": "husky install && husky add .husky/pre-commit \"npm run format\" && git add .husky/pre-commit",
     "format": "prettier --write \"src/**/*.{ts,tsx,css,js,jsx,json,md}\"",
     "precommit": "lint-staged --config .husky/pre-commit.js",
-    "build": "parcel build index.html"
+    "build": "parcel build index.html && cp -R public/* dist"
   },
   "repository": {
     "type": "git",
