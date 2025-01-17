@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "intl-messageformat": "^10.7.10",
+    "intl-messageformat": "^10.7.12",
     "radash": "^12.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
