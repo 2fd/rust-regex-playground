@@ -24,7 +24,7 @@
     "@types/react": "^19.0.4",
     "@types/react-dom": "^19.0.2",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.2",
+    "lint-staged": "^15.4.2",
     "parcel": "^2.13.3",
     "postcss": "^8.4.49",
     "prettier": "^3.4.2",
