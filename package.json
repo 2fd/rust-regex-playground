@@ -30,7 +30,7 @@
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "process": "^0.11.10",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.0.1",
     "tsc-files": "^1.1.4",
     "typescript": "^5.7.2"
   },
