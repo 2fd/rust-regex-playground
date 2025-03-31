@@ -39,7 +39,7 @@
     "intl-messageformat": "^10.7.16",
     "radash": "^12.1.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.1.0",
     "rregex1.0": "npm:rregex@1.0",
     "rregex1.1": "npm:rregex@1.1",
     "rregex1.10": "npm:rregex@1.10",
