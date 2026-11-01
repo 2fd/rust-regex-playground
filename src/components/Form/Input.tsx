@@ -92,32 +92,32 @@ export default React.memo(function Input({
   return (
     <div className="mx-10 pb-8">
       {label && (
-        <label className="text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+        <label className="text-xs leading-4 text-gray-500 uppercase dark:text-gray-300">
           {label}
         </label>
       )}
       <div
-        className={`relative rounded ${
+        className={`relative rounded-sm ${
           error ? 'bg-red-50' : 'bg-white dark:bg-gray-600'
-        } font-mono text-sm shadow ring-1 ${
+        } font-mono text-sm shadow-sm ring-1 ${
           error ? 'ring-red-600' : 'ring-gray-300 dark:ring-gray-700'
         }`}
       >
         <div
-          className={`absolute left-0 top-0 block px-2 py-2 ${
+          className={`absolute top-0 left-0 block px-2 py-2 ${
             error ? 'text-red-400' : 'text-gray-400'
           }`}
         >
           r"
         </div>
         <div
-          className={`absolute right-0 top-0 block px-2 py-2 ${
+          className={`absolute top-0 right-0 block px-2 py-2 ${
             error ? 'text-red-400' : 'text-gray-400'
           }`}
         >
           "
         </div>
-        <pre className="absolute m-0 block h-full w-full resize-none border-0 bg-transparent py-2 pl-6 pr-4 text-gray-600 ring-0">
+        <pre className="absolute m-0 block h-full w-full resize-none border-0 bg-transparent py-2 pr-4 pl-6 text-gray-600 ring-0">
           {splits.map((text: string, i: number) => {
             const isMatch = i % 2 && i !== splits.length - 1
             return (
@@ -125,7 +125,7 @@ export default React.memo(function Input({
                 key={i}
                 className={
                   isMatch
-                    ? 'rounded border-slate-300 bg-slate-200 dark:border-slate-400 dark:bg-slate-500'
+                    ? 'rounded-sm border-slate-300 bg-slate-200 dark:border-slate-400 dark:bg-slate-500'
                     : ''
                 }
               >
@@ -136,14 +136,14 @@ export default React.memo(function Input({
         </pre>
         <textarea
           {...props}
-          className={`relative m-0 block w-full resize-none border-0 bg-transparent py-2 pl-6 pr-4 ${
+          className={`relative m-0 block w-full resize-none border-0 bg-transparent py-2 pr-4 pl-6 ${
             error ? 'text-red-700' : 'text-gray-600 dark:text-gray-100'
           } ring-0`}
           ref={ref}
         />
         {shortcuts && shortcuts.length > 0 && (
           <div
-            className={`rounded-b border-t border-black border-opacity-10 py-2 pl-6 pr-4 dark:border-white dark:border-opacity-10 ${
+            className={`rounded-b-sm border-t border-black/10 py-2 pr-4 pl-6 dark:border-white/10 ${
               error
                 ? 'text-red-700'
                 : 'bg-neutral-50 text-gray-500 dark:bg-gray-700 dark:text-gray-200'
@@ -154,7 +154,7 @@ export default React.memo(function Input({
                 <React.Fragment key={shortcut}>
                   {i !== 0 && <Divider />}
                   <a
-                    className="relative inline-block cursor-pointer rounded-sm bg-transparent px-2 py-0.5 hover:bg-neutral-200 hover:dark:bg-gray-800"
+                    className="relative inline-block cursor-pointer rounded-xs bg-transparent px-2 py-0.5 hover:bg-neutral-200 dark:hover:bg-gray-800"
                     data-value={shortcut}
                     onMouseDown={handleShortcuts}
                     onClick={handleFocusRestore}

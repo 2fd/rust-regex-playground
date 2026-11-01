@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useState,
+} from 'react'
 import ArrowPathIcon from '@heroicons/react/24/solid/esm/ArrowPathIcon.js'
 import {
   useRRegex,
@@ -152,36 +157,54 @@ export default function App() {
 
   const rregex = useRRegex(state.version)
 
+  // Results are computed in the same update as the input change, so each
+  // keystroke renders once with consistent input and results. On a parse error
+  // `executeMethod` keeps the last valid results (e.g. text highlights).
   const handleChangeMethod = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       const method = e.currentTarget.dataset.method
       if (method) {
-        setState((current) => ({
-          ...current,
-          method: getOperation(method),
-        }))
+        setState((current) =>
+          executeMethod(rregex?.RRegex, {
+            ...current,
+            method: getOperation(method),
+          })
+        )
       }
     },
-    [setState]
+    [rregex]
   )
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<{ name?: string; value?: string }>) => {
       const { name, value } = e.target
       if (name) {
-        setState((current) => ({ ...current, [name]: value || '' }))
+        setState((current) => {
+          const next = { ...current, [name]: value || '' }
+          // A version change loads another wasm module; results are
+          // recomputed by the effect below once it is ready.
+          return name === 'version' ? next : executeMethod(rregex?.RRegex, next)
+        })
       }
     },
-    [setState]
+    [rregex]
   )
 
   useEffect(
     () => setQueryString(state),
     [state.regex, state.replace, state.text, state.method, state.version]
   )
+  // The syntax tree can be thousands of lines (e.g. `\w`). Render it at low
+  // priority so typing, matches and captures update first; React interrupts
+  // a stale tree render if another keystroke arrives.
+  const syntax = useDeferredValue(state.syntax)
+  const isSyntaxStale = syntax !== state.syntax
+
+  // Recompute once the wasm module for the selected version has loaded
+  // (initial load and version changes). While it is null this is a no-op.
   useEffect(
-    () => setState(executeMethod(rregex?.RRegex, state)),
-    [state.method, state.regex, state.replace, state.text, setState, rregex]
+    () => setState((current) => executeMethod(rregex?.RRegex, current)),
+    [rregex]
   )
   useEffect(() => {
     console.log(
@@ -206,7 +229,7 @@ export default function App() {
       <main className="flex">
         <section className="min-h-screen w-1/6 flex-auto border-r border-r-neutral-300 bg-slate-200 pt-28 dark:border-r-neutral-500 dark:bg-neutral-900">
           <div className="mx-5">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold uppercase text-neutral-600 dark:text-neutral-400">
+            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
               VERSION
             </p>
             <select
@@ -225,7 +248,7 @@ export default function App() {
             </select>
           </div>
           <div className="mx-5 mt-10">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold uppercase text-neutral-600 dark:text-neutral-400">
+            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
               OPERATION
             </p>
             {[Method.Find, Method.Replace].map((method) => {
@@ -247,11 +270,11 @@ export default function App() {
             })}
           </div>
           <div className="mx-5 mt-10">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold uppercase text-neutral-600 dark:text-neutral-400">
+            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
               DOCUMENTATION
             </p>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRRegexDocs(state.version)}
               target="_blank"
             >
@@ -264,7 +287,7 @@ export default function App() {
               <Typescript width="1em" height="1em" className="block text-lg" />
             </a>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexDocs(rregex?.metadata['regex'])}
               target="_blank"
             >
@@ -277,7 +300,7 @@ export default function App() {
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexSyntaxDocs(rregex?.metadata['regex-syntax'])}
               target="_blank"
             >
@@ -318,10 +341,12 @@ export default function App() {
             matches={state.matches}
             onChange={handleChange}
           />
-          {!!rregex && !state.error && state.syntax && (
-            <div className="mx-5">
+          {!!rregex && !state.error && syntax && (
+            <div
+              className={`mx-5 transition-opacity ${isSyntaxStale ? 'opacity-60' : ''}`}
+            >
               <ViewSyntax
-                value={state.syntax}
+                value={syntax}
                 version={rregex.metadata['regex-syntax']}
               />
             </div>

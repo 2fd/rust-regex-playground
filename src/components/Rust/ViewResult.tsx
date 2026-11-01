@@ -1,7 +1,10 @@
 import React from 'react'
 import { IntlMessageFormat } from 'intl-messageformat'
 import { Divider, Primitive, href } from './Types.tsx'
-import type { Captures, Match } from '../../rregex.ts'
+import type {
+  Captures as CapturesValue,
+  Match as MatchValue,
+} from '../../rregex.ts'
 
 const ordinal = function (position: number) {
   // const list = ['st', 'nd', 'rd', 'th']
@@ -30,7 +33,7 @@ function Container(props: ContainerProps) {
       <div className="mx-5">
         <div className="mb-1 flex items-end justify-between">
           <div>
-            <p className="text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+            <p className="text-xs leading-4 text-gray-500 uppercase dark:text-gray-300">
               {props.name}
             </p>
           </div>
@@ -46,7 +49,7 @@ type BoxProps = React.PropsWithChildren<{}>
 
 function Box(props: BoxProps) {
   return (
-    <div className="mb-4 w-full rounded bg-slate-100 px-4 py-2 font-mono text-sm text-gray-600 shadow ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
+    <div className="mb-4 w-full rounded-sm bg-slate-100 px-4 py-2 font-mono text-sm text-gray-600 shadow-sm ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
       {props.children}
     </div>
   )
@@ -78,7 +81,7 @@ export const ViewReplace = React.memo(function ViewReplace({
 })
 
 export type ViewMatchProps = {
-  matches?: Match[]
+  matches?: MatchValue[]
   version?: string
   value?: string
 }
@@ -107,7 +110,7 @@ export const ViewMatch = React.memo(function ViewMatch(props: ViewMatchProps) {
     <Container
       name={matches.format({ len: props.matches.length }) + ':'}
       action={
-        <p className="text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+        <p className="text-xs leading-4 text-gray-500 uppercase dark:text-gray-300">
           <a
             target="_blank"
             href={docs + '#method.find_iter'}
@@ -138,7 +141,7 @@ export const ViewMatch = React.memo(function ViewMatch(props: ViewMatchProps) {
 })
 
 export function Match(props: {
-  match: Match
+  match: MatchValue
   version?: string
   position?: number
 }) {
@@ -187,7 +190,7 @@ const captures = new IntlMessageFormat(
 )
 
 export type VewCapturesProps = {
-  captures?: Captures[]
+  captures?: CapturesValue[]
   version?: string
   value?: string
 }
@@ -209,7 +212,7 @@ export const ViewCaptures = React.memo(function ViewCaptures(
     <Container
       name={captures.format({ len: props.captures.length }) + ':'}
       action={
-        <p className="text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+        <p className="text-xs leading-4 text-gray-500 uppercase dark:text-gray-300">
           <a
             target="_blank"
             href={docs + '#method.captures_iter'}
@@ -240,7 +243,7 @@ export const ViewCaptures = React.memo(function ViewCaptures(
 })
 
 export function Captures(props: {
-  captures: Captures
+  captures: CapturesValue
   version?: string
   position?: number
 }) {

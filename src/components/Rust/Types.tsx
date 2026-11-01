@@ -10,6 +10,48 @@ export function href(type: string, name: string, mod: string) {
   ).toString()
 }
 
+// Laying out large syntax trees is expensive: `\w` renders ~4k lines with
+// glyphs from 20+ scripts and lone combining marks, which costs >100ms of
+// text shaping per render. `content-visibility: auto` skips that work for
+// items outside the viewport.
+function lazyBlockStyle(value: unknown): React.CSSProperties {
+  return {
+    display: 'block',
+    // Paint containment would clip long lines; grow with the content instead
+    // so the parent <pre> keeps scrolling horizontally.
+    width: 'max-content',
+    minWidth: '100%',
+    contentVisibility: 'auto',
+    containIntrinsicBlockSize: `auto ${countNewlines(value) + 1}lh`,
+  }
+}
+
+// Mirrors the line breaks emitted by `Type`, `Struct` and `Enum`, so skipped
+// items reserve roughly their real height and the scrollbar does not jump.
+function countNewlines(value: unknown): number {
+  if (value === null || typeof value !== 'object') return 0
+  if (ArrayBuffer.isView(value)) return 2
+  if (Array.isArray(value)) {
+    return value.length === 0
+      ? 2
+      : value.length + 1 + value.reduce((n, v) => n + countNewlines(v), 0)
+  }
+  const {
+    '@type': _type,
+    '@name': _name,
+    '@variant': _variant,
+    '@values': values,
+    ...properties
+  } = value as Record<string, unknown>
+  if (Array.isArray(values)) {
+    return values.reduce((n: number, v) => n + countNewlines(v), 0)
+  }
+  const keys = Object.keys(properties)
+  return keys.length === 0
+    ? 0
+    : 1 + keys.reduce((n, key) => n + countNewlines(properties[key]) + 1, 0)
+}
+
 type RustTypeProps = {
   value:
     | string
@@ -55,6 +97,27 @@ export const Type = React.memo(function (props: RustTypeProps) {
               )
             })}
             <span>{']\n' + ' '.repeat(spaces)}</span>
+          </span>
+        )
+      } else if (Array.isArray(value) && value.length > 0) {
+        // Each item is its own block so the browser can skip layout for
+        // off-screen items (e.g. the ~770 ranges of `\w`). Items already
+        // start on their own line, so the rendered text is unchanged.
+        return (
+          <span>
+            <span>{'['}</span>
+            {value.map((value, i, values) => (
+              <span key={i} style={lazyBlockStyle(value)}>
+                {' '.repeat(spaces + 2)}
+                <Type
+                  value={value}
+                  spaces={spaces + 2}
+                  version={props.version}
+                />
+                {i !== values.length - 1 && ','}
+              </span>
+            ))}
+            <span>{' '.repeat(spaces) + ']'}</span>
           </span>
         )
       } else if (Array.isArray(value)) {
