@@ -157,27 +157,37 @@ export default function App() {
 
   const rregex = useRRegex(state.version)
 
+  // Results are computed in the same update as the input change, so each
+  // keystroke renders once with consistent input and results. On a parse error
+  // `executeMethod` keeps the last valid results (e.g. text highlights).
   const handleChangeMethod = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       const method = e.currentTarget.dataset.method
       if (method) {
-        setState((current) => ({
-          ...current,
-          method: getOperation(method),
-        }))
+        setState((current) =>
+          executeMethod(rregex?.RRegex, {
+            ...current,
+            method: getOperation(method),
+          })
+        )
       }
     },
-    [setState]
+    [rregex]
   )
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<{ name?: string; value?: string }>) => {
       const { name, value } = e.target
       if (name) {
-        setState((current) => ({ ...current, [name]: value || '' }))
+        setState((current) => {
+          const next = { ...current, [name]: value || '' }
+          // A version change loads another wasm module; results are
+          // recomputed by the effect below once it is ready.
+          return name === 'version' ? next : executeMethod(rregex?.RRegex, next)
+        })
       }
     },
-    [setState]
+    [rregex]
   )
 
   useEffect(
@@ -190,9 +200,11 @@ export default function App() {
   const syntax = useDeferredValue(state.syntax)
   const isSyntaxStale = syntax !== state.syntax
 
+  // Recompute once the wasm module for the selected version has loaded
+  // (initial load and version changes). While it is null this is a no-op.
   useEffect(
-    () => setState(executeMethod(rregex?.RRegex, state)),
-    [state.method, state.regex, state.replace, state.text, setState, rregex]
+    () => setState((current) => executeMethod(rregex?.RRegex, current)),
+    [rregex]
   )
   useEffect(() => {
     console.log(
