@@ -1,4 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {
+  useCallback,
+  useDeferredValue,
+  useEffect,
+  useState,
+} from 'react'
 import ArrowPathIcon from '@heroicons/react/24/solid/esm/ArrowPathIcon.js'
 import {
   useRRegex,
@@ -179,6 +184,12 @@ export default function App() {
     () => setQueryString(state),
     [state.regex, state.replace, state.text, state.method, state.version]
   )
+  // The syntax tree can be thousands of lines (e.g. `\w`). Render it at low
+  // priority so typing, matches and captures update first; React interrupts
+  // a stale tree render if another keystroke arrives.
+  const syntax = useDeferredValue(state.syntax)
+  const isSyntaxStale = syntax !== state.syntax
+
   useEffect(
     () => setState(executeMethod(rregex?.RRegex, state)),
     [state.method, state.regex, state.replace, state.text, setState, rregex]
@@ -318,10 +329,12 @@ export default function App() {
             matches={state.matches}
             onChange={handleChange}
           />
-          {!!rregex && !state.error && state.syntax && (
-            <div className="mx-5">
+          {!!rregex && !state.error && syntax && (
+            <div
+              className={`mx-5 transition-opacity ${isSyntaxStale ? 'opacity-60' : ''}`}
+            >
               <ViewSyntax
-                value={state.syntax}
+                value={syntax}
                 version={rregex.metadata['regex-syntax']}
               />
             </div>

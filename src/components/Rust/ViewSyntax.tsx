@@ -7,7 +7,10 @@ export type ViewSyntaxProps = {
   version?: string
 }
 
-export default function ViewSyntax({ value, version }: ViewSyntaxProps) {
+export default React.memo(function ViewSyntax({
+  value,
+  version,
+}: ViewSyntaxProps) {
   return (
     <div className="w-full">
       <div className="mx-5">
@@ -25,4 +28,4 @@ export default function ViewSyntax({ value, version }: ViewSyntaxProps) {
       </div>
     </div>
   )
-}
+})
