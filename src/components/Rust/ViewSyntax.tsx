@@ -11,10 +11,10 @@ export default function ViewSyntax({ value, version }: ViewSyntaxProps) {
   return (
     <div className="w-full">
       <div className="mx-5">
-        <p className="mb-1 text-xs uppercase leading-4 text-gray-500 dark:text-gray-300">
+        <p className="mb-1 text-xs leading-4 text-gray-500 uppercase dark:text-gray-300">
           Syntax
         </p>
-        <div className="w-full rounded bg-white px-4 py-2 font-mono text-sm text-gray-600 shadow ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
+        <div className="w-full rounded-sm bg-white px-4 py-2 font-mono text-sm text-gray-600 shadow-sm ring-1 ring-gray-300 dark:bg-gray-600 dark:text-gray-100 dark:ring-gray-700">
           <pre className="w-full overflow-auto">
             <Struct
               value={value}

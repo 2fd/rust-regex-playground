@@ -1,0 +1,14 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "endOfLine": "lf",
+  "semi": false,
+  "singleQuote": true,
+  "tabWidth": 2,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "sortTailwindcss": {
+    "stylesheet": "./src/index.css"
+  },
+  "ignorePatterns": ["pnpm-lock.yaml"]
+}

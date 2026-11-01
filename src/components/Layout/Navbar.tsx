@@ -8,21 +8,21 @@ export default React.memo(function Navbar() {
   const [dark, set] = useState(() => isDark())
   const toggle = useCallback(() => {
     set(toggleDark())
-  }, [dark])
+  }, [])
 
   return (
-    <header className="absolute left-0 top-0 mx-auto flex w-full justify-between border-b border-b-neutral-200 bg-white shadow-md dark:border-b-neutral-600 dark:bg-neutral-800">
+    <header className="absolute top-0 left-0 mx-auto flex w-full justify-between border-b border-b-neutral-200 bg-white shadow-md dark:border-b-neutral-600 dark:bg-neutral-800">
       <div className="relative px-4 py-4">
         <h1 className="relative text-base font-medium text-neutral-900 dark:text-white">
           RUST REGEX{' '}
-          <sub className="absolute left-1/2 top-6 block opacity-50">
+          <sub className="absolute top-6 left-1/2 block opacity-50">
             playground
           </sub>
         </h1>
       </div>
       <div className="relative px-4 py-4">
         <a
-          className="mx-1 rounded-md px-2 py-1 text-sm font-normal uppercase text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+          className="mx-1 rounded-md px-2 py-1 text-sm font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
           href="https://github.com/2fd/rust-regex-playground"
           target="_blank"
         >
@@ -33,7 +33,7 @@ export default React.memo(function Navbar() {
           />
         </a>
         <a
-          className="mx-1 cursor-pointer rounded-md px-2 py-1 text-sm font-normal uppercase text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+          className="mx-1 cursor-pointer rounded-md px-2 py-1 text-sm font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
           onClick={toggle}
         >
           {dark ? (

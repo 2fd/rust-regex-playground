@@ -206,7 +206,7 @@ export default function App() {
       <main className="flex">
         <section className="min-h-screen w-1/6 flex-auto border-r border-r-neutral-300 bg-slate-200 pt-28 dark:border-r-neutral-500 dark:bg-neutral-900">
           <div className="mx-5">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold uppercase text-neutral-600 dark:text-neutral-400">
+            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
               VERSION
             </p>
             <select
@@ -225,7 +225,7 @@ export default function App() {
             </select>
           </div>
           <div className="mx-5 mt-10">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold uppercase text-neutral-600 dark:text-neutral-400">
+            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
               OPERATION
             </p>
             {[Method.Find, Method.Replace].map((method) => {
@@ -247,11 +247,11 @@ export default function App() {
             })}
           </div>
           <div className="mx-5 mt-10">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold uppercase text-neutral-600 dark:text-neutral-400">
+            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
               DOCUMENTATION
             </p>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRRegexDocs(state.version)}
               target="_blank"
             >
@@ -264,7 +264,7 @@ export default function App() {
               <Typescript width="1em" height="1em" className="block text-lg" />
             </a>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexDocs(rregex?.metadata['regex'])}
               target="_blank"
             >
@@ -277,7 +277,7 @@ export default function App() {
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexSyntaxDocs(rregex?.metadata['regex-syntax'])}
               target="_blank"
             >

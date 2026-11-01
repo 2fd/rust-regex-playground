@@ -12,13 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 26
-          registry-url: https://registry.npmjs.org/
+          cache: pnpm
 
       - name: installing
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+
+      - name: checking
+        run: pnpm check
 
       - name: building
-        run: npm run build
+        run: pnpm build
