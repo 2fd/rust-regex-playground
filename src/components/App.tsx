@@ -277,14 +277,14 @@ export default function App() {
               <Rust width="1em" height="1em" className="block text-lg" />
             </a>
             <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm  font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
+              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm font-normal uppercase leading-3 text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
               href={getRustRegexSyntaxDocs(rregex?.metadata['regex-syntax'])}
               target="_blank"
             >
               <div>
                 REGEX-SYNTAX
                 {rregex?.metadata['regex-syntax'] && (
-                  <span className="text-xs  opacity-50">{` (${rregex?.metadata['regex-syntax']})`}</span>
+                  <span className="text-xs opacity-50">{` (${rregex?.metadata['regex-syntax']})`}</span>
                 )}
               </div>
               <Rust width="1em" height="1em" className="block text-lg" />

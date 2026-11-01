@@ -143,7 +143,7 @@ export default React.memo(function Input({
         />
         {shortcuts && shortcuts.length > 0 && (
           <div
-            className={`rounded-b border-t border-black border-opacity-10 py-2 pl-6 pr-4  dark:border-white dark:border-opacity-10 ${
+            className={`rounded-b border-t border-black border-opacity-10 py-2 pl-6 pr-4 dark:border-white dark:border-opacity-10 ${
               error
                 ? 'text-red-700'
                 : 'bg-neutral-50 text-gray-500 dark:bg-gray-700 dark:text-gray-200'
