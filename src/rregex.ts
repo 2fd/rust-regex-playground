@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import type * as rregex from 'rregex1.10'
+import type * as rregex from 'rregex1.13'
 import { memo } from 'radash'
 
 export const VERSIONS = {
+  '1.13': import('rregex1.13'),
+  '1.12': import('rregex1.12'),
   '1.11': import('rregex1.11'),
   '1.10': import('rregex1.10'),
   '1.9': import('rregex1.9'),
@@ -18,7 +20,7 @@ export const VERSIONS = {
 } as const
 
 export type RRegexVersion = keyof typeof VERSIONS
-export const DEFAULT_VERSION: RRegexVersion = '1.11'
+export const DEFAULT_VERSION: RRegexVersion = '1.13'
 
 export type Hir = rregex.Hir
 export type Match = rregex.Match
@@ -34,7 +36,7 @@ export const isRRegexVersion = (
 const initializer = memo(
   async (version: RRegexVersion) => {
     const mod = await VERSIONS[version]
-    await (mod.default as any)()
+    await (mod as any).default()
     return mod
   },
   {
