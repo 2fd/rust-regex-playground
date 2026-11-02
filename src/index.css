@@ -10,6 +10,8 @@
 */
 @theme {
   --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  /* Max width of the header and the input / output area (`max-w-app`). */
+  --container-app: 100rem;
 
   --color-bg: #e3e6ea;
   --color-surface: #eceef1;
