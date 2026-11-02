@@ -44,7 +44,8 @@ export type SetupProps = {
  */
 export default React.memo(function Setup(props: SetupProps) {
   return (
-    <div className="grid gap-3 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+    // Golden ratio, like the input / output columns.
+    <div className="grid gap-3 xl:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)]">
       <div className="flex flex-col">
         <div
           id="setup-operation"

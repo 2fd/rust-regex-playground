@@ -242,7 +242,8 @@ export default function App() {
         error={status === 'error'}
       />
 
-      <main className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:overflow-hidden">
+      {/* Golden ratio split: input ≈ 61.8%, output ≈ 38.2%. */}
+      <main className="grid min-h-0 flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)] lg:overflow-hidden">
         <section
           aria-label="Input"
           className="flex flex-col gap-3 border-line p-5 lg:min-h-0 lg:overflow-y-auto lg:border-r"
