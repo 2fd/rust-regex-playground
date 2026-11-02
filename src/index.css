@@ -1,21 +1,80 @@
 @import 'tailwindcss';
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
+  Console design tokens. Registered as theme colors so components use semantic
+  utilities (`bg-surface`, `text-fg-dim`, `border-line`, `text-syn-type`...).
+  Light is a dimmed grey palette with a muted teal accent; `.dark` (set on
+  <html> by theme.ts) switches to the dark terminal palette.
 */
+@theme {
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-bg: #e3e6ea;
+  --color-surface: #eceef1;
+  --color-surface-2: #e5e8ec;
+  --color-line: #c6ccd4;
+  --color-fg: #262b33;
+  --color-fg-dim: #5f6873;
+  --color-accent: #2c7a72;
+  --color-accent-soft: rgb(44 122 114 / 0.12);
+  --color-accent-fg: #f2f4f6;
+  --color-err: #b4372f;
+  --color-err-soft: #f1dfdd;
+  /* Match highlights: consecutive matches alternate between the two. */
+  --color-mark: rgb(44 122 114 / 0.2);
+  --color-mark-2: rgb(84 110 160 / 0.2);
+  /* Syntax tree (Rust/Types.tsx). */
+  --color-syn-type: #2f6a8f;
+  --color-syn-enum: #75559a;
+  --color-syn-lit: #2c7a72;
+  --color-syn-meta: #7d8692;
+}
+
 @layer base {
+  .dark {
+    --color-bg: #0d1117;
+    --color-surface: #11161d;
+    --color-surface-2: #171d26;
+    --color-line: #232b36;
+    --color-fg: #d7dde5;
+    --color-fg-dim: #7d8896;
+    --color-accent: #7ee787;
+    --color-accent-soft: rgb(126 231 135 / 0.12);
+    --color-accent-fg: #0d1117;
+    --color-err: #ff7b72;
+    --color-err-soft: rgb(255 123 114 / 0.08);
+    --color-mark: rgb(126 231 135 / 0.28);
+    --color-mark-2: rgb(121 192 255 / 0.3);
+    --color-syn-type: #79c0ff;
+    --color-syn-enum: #d2a8ff;
+    --color-syn-lit: #a5d6ff;
+    --color-syn-meta: #6e7681;
+  }
+
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-mono);
+  }
+
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    border-color: var(--color-line);
+  }
+
+  textarea {
+    caret-color: var(--color-accent);
   }
 }

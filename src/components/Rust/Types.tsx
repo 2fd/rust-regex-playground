@@ -85,7 +85,7 @@ export const Type = React.memo(function (props: RustTypeProps) {
           <span>
             <span>{'\n' + ' '.repeat(spaces + 2)}</span>
             {t && (
-              <span className="text-gray-300 dark:text-gray-500">{`[${t}; ${value.length}] `}</span>
+              <span className="text-syn-meta">{`[${t}; ${value.length}] `}</span>
             )}
             <span>{'['}</span>
             {Array.from(value.values(), (value: number, i: number) => {
@@ -152,9 +152,7 @@ export const Type = React.memo(function (props: RustTypeProps) {
         )
       } else {
         return (
-          <span className="text-emerald-600 dark:text-emerald-400">
-            {JSON.stringify(value, null, 2)}
-          </span>
+          <span className="text-syn-lit">{JSON.stringify(value, null, 2)}</span>
         )
       }
     default:
@@ -181,17 +179,15 @@ export const Struct = React.memo(function (props: RustStructProps) {
     ...properties
   } = props.value
   return (
-    <span className="text-gray-600 dark:text-gray-100">
+    <span className="text-fg">
       <a
-        target="_black"
+        target="_blank"
         href={href(type, name, props.version || 'latest')}
-        className="font-semibold text-cyan-600 hover:underline dark:text-cyan-400"
+        className="font-semibold text-syn-type hover:underline"
       >
         {name.split('::').slice(-1).join('')}
       </a>
-      {!!values && (
-        <span className="text-cyan-600 dark:text-cyan-400">{'('}</span>
-      )}
+      {!!values && <span className="text-syn-type">{'('}</span>}
       {!!values &&
         Array.isArray(values) &&
         values.map((value, i, values) => {
@@ -202,12 +198,8 @@ export const Struct = React.memo(function (props: RustStructProps) {
             </React.Fragment>
           )
         })}
-      {!!values && (
-        <span className="text-cyan-600 dark:text-cyan-400">{')'}</span>
-      )}
-      {!values && (
-        <span className="text-cyan-600 dark:text-cyan-400">{' {\n'}</span>
-      )}
+      {!!values && <span className="text-syn-type">{')'}</span>}
+      {!values && <span className="text-syn-type">{' {\n'}</span>}
       {!values &&
         Object.keys(properties).map((key) => {
           return (
@@ -223,9 +215,7 @@ export const Struct = React.memo(function (props: RustStructProps) {
           )
         })}
       {!values && (
-        <span className="text-cyan-600 dark:text-cyan-400">
-          {' '.repeat(spaces) + '}'}
-        </span>
+        <span className="text-syn-type">{' '.repeat(spaces) + '}'}</span>
       )}
     </span>
   )
@@ -258,16 +248,14 @@ export const Enum = React.memo(function ({
   return (
     <>
       <a
-        className="text-yellow-600 hover:underline dark:text-yellow-400"
+        className="text-syn-enum hover:underline"
         href={href(type, name, props.version || 'latest')}
       >
         {name.split('::').slice(-1).join('')}
         {'::'}
         {variant}
       </a>
-      {!!values && (
-        <span className="text-yellow-600 dark:text-yellow-400">{'('}</span>
-      )}
+      {!!values && <span className="text-syn-enum">{'('}</span>}
       {!!values &&
         Array.isArray(values) &&
         values.map((value, i, values) => {
@@ -278,12 +266,10 @@ export const Enum = React.memo(function ({
             </React.Fragment>
           )
         })}
-      {!!values && (
-        <span className="text-yellow-600 dark:text-yellow-400">{')'}</span>
-      )}
+      {!!values && <span className="text-syn-enum">{')'}</span>}
       {!values && keys.length > 0 && (
         <>
-          <span className="text-yellow-600 dark:text-yellow-400">{' {\n'}</span>
+          <span className="text-syn-enum">{' {\n'}</span>
           {keys.map((key) => {
             return (
               <span key={key}>
@@ -297,9 +283,7 @@ export const Enum = React.memo(function ({
               </span>
             )
           })}
-          <span className="text-yellow-600 dark:text-yellow-400">
-            {' '.repeat(spaces) + '}'}
-          </span>
+          <span className="text-syn-enum">{' '.repeat(spaces) + '}'}</span>
         </>
       )}
     </>
@@ -327,11 +311,9 @@ export const Primitive = Object.assign(
       const code = ('0000' + value.toString(16)).slice(-4)
       return (
         <>
-          <span className="text-emerald-600 dark:text-emerald-400">
-            '{String.fromCharCode(value)}'
-          </span>
+          <span className="text-syn-lit">'{String.fromCharCode(value)}'</span>
           <a
-            className="ml-1 text-gray-400 hover:underline"
+            className="ml-1 text-syn-meta hover:underline"
             target="_blank"
             href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
           >
@@ -345,11 +327,9 @@ export const Primitive = Object.assign(
       const code = ('0000' + String(value).charCodeAt(0).toString(16)).slice(-4)
       return (
         <>
-          <span className="text-emerald-600 dark:text-emerald-400">
-            '{value}'
-          </span>
+          <span className="text-syn-lit">'{value}'</span>
           <a
-            className="ml-1 text-gray-400 hover:underline"
+            className="ml-1 text-syn-meta hover:underline"
             target="_blank"
             href={`https://unicodeplus.com/U+${code.toUpperCase()}`}
           >
@@ -360,32 +340,21 @@ export const Primitive = Object.assign(
       )
     },
     String: ({ value }: { value: string }) => {
-      return (
-        <span className="text-emerald-600 dark:text-emerald-400">
-          "{value}"
-        </span>
-      )
+      return <span className="text-syn-lit">"{value}"</span>
     },
     Number: ({ value }: { value: number }) => {
-      return (
-        <span className="text-emerald-600 dark:text-emerald-400">
-          {String(value)}
-        </span>
-      )
+      return <span className="text-syn-lit">{String(value)}</span>
     },
     Boolean: ({ value }: { value: boolean }) => {
       return (
-        <span
-          title="boolean"
-          className="text-emerald-600 dark:text-emerald-400"
-        >
+        <span title="boolean" className="text-syn-lit">
           {value ? 'true' : 'false'}
         </span>
       )
     },
     None: () => {
       return (
-        <span title="None" className="text-gray-400">
+        <span title="None" className="text-syn-meta">
           None
         </span>
       )
@@ -422,6 +391,6 @@ export function unit(value: any) {
 
 export function Divider() {
   return (
-    <span className="mx-1 inline-block h-4 border-l border-l-black align-middle opacity-20 dark:border-l-white" />
+    <span className="mx-1 inline-block h-4 border-l border-l-fg align-middle opacity-20" />
   )
 }
