@@ -4,10 +4,8 @@ import React, {
   useEffect,
   useState,
 } from 'react'
-import ArrowPathIcon from '@heroicons/react/24/solid/esm/ArrowPathIcon.js'
 import {
   useRRegex,
-  VERSIONS,
   Match,
   Hir,
   isRRegexVersion,
@@ -16,32 +14,23 @@ import {
   Captures,
   RRegex,
 } from '../rregex.ts'
-import Navbar from './Layout/Navbar.tsx'
-import Alert from './Layout/Alert.tsx'
-import Input from './Form/Input.tsx'
-import ViewSyntax from './Rust/ViewSyntax.tsx'
 import {
   getRRegexDocs,
   getRustRegexDocs,
   getRustRegexSyntaxDocs,
 } from '../utils.ts'
-import Rust from './Icon/Rust.tsx'
-import { ViewMatch, ViewReplace, ViewCaptures } from './Rust/ViewResult.tsx'
-import Typescript from './Icon/Typescript.tsx'
-
-const enum Method {
-  Find = 'find',
-  Replace = 'replace',
-}
+import CodeField from './Form/CodeField.tsx'
+import Setup, { type Method } from './Form/Setup.tsx'
+import Block from './Layout/Block.tsx'
+import Header from './Layout/Header.tsx'
+import Output, {
+  ErrorNotice,
+  getStatus,
+  getStatusText,
+} from './Rust/Results.tsx'
 
 export function getOperation(value: string | null | undefined): Method {
-  switch (value) {
-    case Method.Replace:
-      return Method.Replace
-    case Method.Find:
-    default:
-      return Method.Find
-  }
+  return value === 'replace' ? 'replace' : 'find'
 }
 
 export function getVersion(
@@ -64,29 +53,17 @@ export function executeMethod(Regex: any, state: AppState): AppState {
           .flatMap((name, i) => (name ? ['$' + name, '$' + i] : ['$' + i]))
       : undefined
 
-    switch (state.method) {
-      case Method.Find:
-        return {
-          ...state,
-          error: undefined,
-          syntax: rregex.syntax(),
-          matches: rregex.findAll(state.text),
-          captures: rregex.capturesAll && rregex.capturesAll(state.text),
-          shortcuts,
-          result: undefined,
-        }
-      case Method.Replace:
-        return {
-          ...state,
-          error: undefined,
-          syntax: rregex.syntax(),
-          matches: rregex.findAll(state.text),
-          captures: rregex.capturesAll && rregex.capturesAll(state.text),
-          shortcuts,
-          result: rregex.replaceAll(state.text, state.replace),
-        }
-      default:
-        return state
+    return {
+      ...state,
+      error: undefined,
+      syntax: rregex.syntax(),
+      matches: rregex.findAll(state.text),
+      captures: rregex.capturesAll && rregex.capturesAll(state.text),
+      shortcuts,
+      result:
+        state.method === 'replace'
+          ? rregex.replaceAll(state.text, state.replace)
+          : undefined,
     }
   } catch (err) {
     console.error('executeMethod', err)
@@ -99,18 +76,11 @@ export function setQueryString(state: AppState) {
     const query = new URLSearchParams()
     query.set('version', state.version)
     query.set('method', state.method)
-
-    switch (state.method) {
-      case Method.Find:
-        state.regex && query.set('regex', state.regex)
-        state.text && query.set('text', state.text)
-        break
-      case Method.Replace:
-        state.regex && query.set('regex', state.regex)
-        state.replace && query.set('replace', state.replace)
-        state.text && query.set('text', state.text)
-        break
-    }
+    state.regex && query.set('regex', state.regex)
+    state.method === 'replace' &&
+      state.replace &&
+      query.set('replace', state.replace)
+    state.text && query.set('text', state.text)
 
     const url = new URL(location.href)
     url.search = query.toString()
@@ -128,13 +98,15 @@ type AppMethodState = {
   error: string | undefined
 }
 
-type AppState = AppMethodState & {
+export type AppState = AppMethodState & {
   ready: boolean
   version: string
   regex: string
   replace: string
   text: string
 }
+
+type Field = 'regex' | 'replace' | 'text' | 'version'
 
 export default function App() {
   const [state, setState] = useState<AppState>(() => {
@@ -160,34 +132,36 @@ export default function App() {
   // Results are computed in the same update as the input change, so each
   // keystroke renders once with consistent input and results. On a parse error
   // `executeMethod` keeps the last valid results (e.g. text highlights).
-  const handleChangeMethod = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement>) => {
-      const method = e.currentTarget.dataset.method
-      if (method) {
-        setState((current) =>
-          executeMethod(rregex?.RRegex, {
-            ...current,
-            method: getOperation(method),
-          })
-        )
-      }
+  const setField = useCallback(
+    (name: Field, value: string) => {
+      setState((current) => {
+        const next = { ...current, [name]: value }
+        // A version change loads another wasm module; results are
+        // recomputed by the effect below once it is ready.
+        return name === 'version' ? next : executeMethod(rregex?.RRegex, next)
+      })
     },
     [rregex]
   )
 
-  const handleChange = useCallback(
-    (e: React.ChangeEvent<{ name?: string; value?: string }>) => {
-      const { name, value } = e.target
-      if (name) {
-        setState((current) => {
-          const next = { ...current, [name]: value || '' }
-          // A version change loads another wasm module; results are
-          // recomputed by the effect below once it is ready.
-          return name === 'version' ? next : executeMethod(rregex?.RRegex, next)
-        })
-      }
+  const setMethod = useCallback(
+    (method: Method) => {
+      setState((current) =>
+        executeMethod(rregex?.RRegex, { ...current, method })
+      )
     },
     [rregex]
+  )
+
+  const setRegex = useCallback((v: string) => setField('regex', v), [setField])
+  const setReplace = useCallback(
+    (v: string) => setField('replace', v),
+    [setField]
+  )
+  const setText = useCallback((v: string) => setField('text', v), [setField])
+  const setVersion = useCallback(
+    (v: string) => setField('version', v),
+    [setField]
   )
 
   useEffect(
@@ -206,6 +180,18 @@ export default function App() {
     () => setState((current) => executeMethod(rregex?.RRegex, current)),
     [rregex]
   )
+
+  // Alt+1 / Alt+2 switch between find and replace.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!e.altKey || (e.code !== 'Digit1' && e.code !== 'Digit2')) return
+      e.preventDefault()
+      setMethod(e.code === 'Digit1' ? 'find' : 'replace')
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [setMethod])
+
   useEffect(() => {
     console.log(
       `%c
@@ -223,183 +209,158 @@ export default function App() {
     )
   }, [])
 
+  const regexVersion = rregex?.metadata['regex']
+  const regexSyntaxVersion = rregex?.metadata['regex-syntax']
+  const status = getStatus({
+    ready: !!rregex,
+    error: state.error,
+    regex: state.regex,
+  })
+  const ok = status === 'ok'
+  const docs = [
+    {
+      label: 'rregex',
+      version: state.version,
+      href: getRRegexDocs(state.version),
+    },
+    {
+      label: 'regex',
+      version: regexVersion,
+      href: getRustRegexDocs(regexVersion),
+    },
+    {
+      label: 'regex-syntax',
+      version: regexSyntaxVersion,
+      href: getRustRegexSyntaxDocs(regexSyntaxVersion),
+    },
+  ]
+
   return (
-    <>
-      <Navbar />
-      <main className="flex">
-        <section className="min-h-screen w-1/6 flex-auto border-r border-r-neutral-300 bg-slate-200 pt-28 dark:border-r-neutral-500 dark:bg-neutral-900">
-          <div className="mx-5">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
-              VERSION
-            </p>
-            <select
-              className="block w-full rounded-md border-none bg-transparent px-1 py-1 font-mono text-sm text-neutral-900 dark:text-white"
-              name="version"
-              onChange={handleChange}
-              value={state.version}
-            >
-              {Object.keys(VERSIONS).map((version) => {
-                return (
-                  <option key={version} value={version}>
-                    v{version}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-          <div className="mx-5 mt-10">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
-              OPERATION
-            </p>
-            {[Method.Find, Method.Replace].map((method) => {
-              return (
-                <a
-                  key={method}
-                  className={
-                    'inline-block w-full cursor-pointer border-r-2 px-2 py-2 text-sm uppercase' +
-                    (state.method === method
-                      ? ' border-r-indigo-500 text-indigo-600 dark:border-r-white dark:text-white'
-                      : ' border-r-transparent text-neutral-500 hover:border-r-neutral-400 hover:text-neutral-600 dark:text-neutral-400 dark:hover:border-b-neutral-300 dark:hover:text-neutral-300')
-                  }
-                  data-method={method}
-                  onClick={handleChangeMethod}
-                >
-                  {method}
-                </a>
-              )
-            })}
-          </div>
-          <div className="mx-5 mt-10">
-            <p className="mb-4 block border-b border-b-neutral-300 text-sm font-semibold text-neutral-600 uppercase dark:text-neutral-400">
-              DOCUMENTATION
-            </p>
-            <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href={getRRegexDocs(state.version)}
-              target="_blank"
-            >
-              <div>
-                RRegex{' '}
-                {rregex?.metadata['regex'] && (
-                  <span className="text-xs opacity-50">{` (${state.version})`}</span>
-                )}
-              </div>
-              <Typescript width="1em" height="1em" className="block text-lg" />
-            </a>
-            <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href={getRustRegexDocs(rregex?.metadata['regex'])}
-              target="_blank"
-            >
-              <div>
-                REGEX{' '}
-                {rregex?.metadata['regex'] && (
-                  <span className="text-xs opacity-50">{` (${rregex?.metadata['regex']})`}</span>
-                )}
-              </div>
-              <Rust width="1em" height="1em" className="block text-lg" />
-            </a>
-            <a
-              className="mb-2 flex w-full flex-wrap items-center justify-between rounded-md px-2 py-1 text-sm leading-3 font-normal text-neutral-700 uppercase hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-600"
-              href={getRustRegexSyntaxDocs(rregex?.metadata['regex-syntax'])}
-              target="_blank"
-            >
-              <div>
-                REGEX-SYNTAX
-                {rregex?.metadata['regex-syntax'] && (
-                  <span className="text-xs opacity-50">{` (${rregex?.metadata['regex-syntax']})`}</span>
-                )}
-              </div>
-              <Rust width="1em" height="1em" className="block text-lg" />
-            </a>
-          </div>
-        </section>
-        <section className="min-h-screen w-3/6 border-r border-r-neutral-300 bg-slate-100 pt-24 dark:border-r-neutral-500 dark:bg-neutral-800">
-          <Input
-            label="Regular expression"
-            rows={1}
-            error={!!state.error}
-            name="regex"
-            value={state.regex}
-            onChange={handleChange}
+    <div className="flex h-screen flex-col bg-bg text-[13px] text-fg">
+      <Header
+        status={getStatusText(status, state.version, state.matches?.length)}
+        error={status === 'error'}
+      />
+
+      {/* Centered up to `max-w-app`; golden ratio split inside:
+          input ≈ 61.8%, output ≈ 38.2%. */}
+      <main className="mx-auto grid min-h-0 w-full max-w-app flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)] lg:overflow-hidden">
+        <section
+          aria-label="Input"
+          className="flex flex-col gap-3 border-line p-5 lg:min-h-0 lg:overflow-y-auto lg:border-r"
+        >
+          <ColumnTitle>Input</ColumnTitle>
+          <Setup
+            method={state.method}
+            onMethodChange={setMethod}
+            version={state.version}
+            onVersionChange={setVersion}
+            regexVersion={regexVersion}
+            regexSyntaxVersion={regexSyntaxVersion}
           />
-          {state.method === Method.Replace && (
-            <Input
-              label="Replace expression"
-              rows={1}
-              name="replace"
-              value={state.replace}
-              shortcuts={state.shortcuts}
-              onChange={handleChange}
+          <Block
+            title="Regular expression"
+            meta="Rust regex syntax"
+            tone={state.error ? 'error' : 'input'}
+          >
+            <CodeField
+              label="Regular expression"
+              value={state.regex}
+              onValueChange={setRegex}
+              placeholder="(?<year>\d{4})-(?<month>\d{2})"
+              autoFocus
+              prompt
             />
-          )}
-          <Input
-            label="Text"
-            rows={5}
-            name="text"
-            value={state.text}
-            matches={state.matches}
-            onChange={handleChange}
-          />
-          {!!rregex && !state.error && syntax && (
-            <div
-              className={`mx-5 transition-opacity ${isSyntaxStale ? 'opacity-60' : ''}`}
-            >
-              <ViewSyntax
-                value={syntax}
-                version={rregex.metadata['regex-syntax']}
-              />
-            </div>
-          )}
-          <div className="pb-20" />
-        </section>
-        <section className="min-h-screen w-2/6 flex-auto bg-white pt-24 dark:bg-neutral-700">
-          {!rregex && (
-            <div className="flex justify-center p-20">
-              <ArrowPathIcon className="h-8 w-8 animate-spin text-indigo-600 dark:text-white" />
-            </div>
-          )}
-          {!!rregex && state.error && (
-            <div className="pb-6">
-              <Alert
-                title={
-                  state.error.slice(0, 1).toUpperCase() +
-                  state.error.slice(1, state.error.indexOf('\n'))
-                }
-                message={state.error
-                  .slice(state.error.indexOf('\n') + 1)
-                  .trim()}
-              />
-            </div>
-          )}
-          {!!rregex &&
-            !!state.regex &&
-            !state.error &&
-            state.method === Method.Replace && (
-              <div className="pb-6">
-                <ViewReplace value={state.result} />
+            {state.error && (
+              <div className="px-4 pb-3">
+                <ErrorNotice error={state.error} />
               </div>
             )}
-          {!!rregex && !!state.regex && !state.error && state.matches && (
-            <div className="pb-6">
-              <ViewMatch
-                matches={state.matches}
-                value={state.text}
-                version={rregex.metadata.regex}
+          </Block>
+          {state.method === 'replace' && (
+            <Block title="Replace with" meta="$1 / $name" tone="input">
+              <CodeField
+                label="Replace with"
+                value={state.replace}
+                onValueChange={setReplace}
+                placeholder="$month/$year"
+                shortcuts={state.shortcuts}
+                prompt
               />
-            </div>
+            </Block>
           )}
-          {!!rregex && !!state.regex && !state.error && state.captures && (
-            <div className="pb-6">
-              <ViewCaptures
-                captures={state.captures}
-                value={state.text}
-                version={rregex.metadata.regex}
-              />
-            </div>
-          )}
+          <Block
+            title="Test string"
+            meta="matches are highlighted as you type"
+            tone="input"
+          >
+            <CodeField
+              label="Test string"
+              value={state.text}
+              onValueChange={setText}
+              placeholder="paste the text to search"
+              rows={8}
+              matches={ok ? state.matches : undefined}
+            />
+          </Block>
+          <footer className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-2 text-[12px] text-fg-dim">
+            <span>
+              <Key>Alt</Key>+<Key>1</Key> find
+            </span>
+            <span>
+              <Key>Alt</Key>+<Key>2</Key> replace
+            </span>
+            <span className="ml-auto flex gap-3">
+              {docs.map((d) => (
+                <a
+                  key={d.label}
+                  href={d.href}
+                  target="_blank"
+                  className="hover:text-accent hover:underline"
+                >
+                  {d.label}@{d.version ?? '…'}
+                </a>
+              ))}
+            </span>
+          </footer>
+        </section>
+
+        <section
+          aria-label="Output"
+          className="flex flex-col gap-3 p-5 lg:min-h-0 lg:overflow-y-auto"
+        >
+          <ColumnTitle>Output</ColumnTitle>
+          <Output
+            status={status}
+            version={state.version}
+            method={state.method}
+            result={state.result}
+            matches={state.matches}
+            captures={state.captures}
+            shortcuts={state.shortcuts}
+            syntax={syntax}
+            isSyntaxStale={isSyntaxStale}
+            regexVersion={regexVersion}
+            regexSyntaxVersion={regexSyntaxVersion}
+          />
         </section>
       </main>
-    </>
+    </div>
+  )
+}
+
+function ColumnTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="text-[11px] tracking-widest text-fg-dim uppercase">
+      {children}
+    </div>
+  )
+}
+
+function Key({ children }: { children: React.ReactNode }) {
+  return (
+    <kbd className="rounded border border-line bg-surface-2 px-1 text-[11px] text-fg">
+      {children}
+    </kbd>
   )
 }

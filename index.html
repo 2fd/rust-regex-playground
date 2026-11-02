@@ -19,9 +19,23 @@
       type="image/svg+xml"
       href="https://docs.rs/-/rustdoc.static/favicon-2c020d218678b618.svg"
     />
-    <title>Redux regex playground</title>
+    <title>Rust Regex Playground</title>
+    <!--
+      Resolve the theme before first paint (same rules as src/theme.ts):
+      the stored choice if the user picked one, otherwise the OS preference.
+    -->
+    <script>
+      try {
+        const theme = localStorage.getItem('theme')
+        const dark =
+          theme === 'dark' ||
+          (theme !== 'light' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.classList.toggle('dark', dark)
+      } catch {}
+    </script>
     <link
-      href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <link href="./src/index.css" rel="stylesheet" />
@@ -29,46 +43,15 @@
   </head>
   <body>
     <div id="root">
-      <header
-        class="absolute top-0 left-0 mx-auto flex w-full justify-between border-b border-b-neutral-200 bg-white shadow-md dark:border-b-neutral-600 dark:bg-neutral-800"
-      >
-        <div class="relative px-4 py-4">
-          <h1
-            class="relative text-base font-medium text-neutral-900 dark:text-white"
-          >
-            RUST REGEX
-            <sub class="absolute top-6 left-1/2 block opacity-50"
-              >playground</sub
-            >
-          </h1>
+      <header class="border-b border-line">
+        <div
+          class="mx-auto flex max-w-app items-center gap-2 px-5 py-3 text-[13px]"
+        >
+          <span class="text-accent">❯</span>
+          <span class="font-bold">rust-regex</span>
+          <span class="text-fg-dim">playground</span>
         </div>
-        <div class="relative px-4 py-4"></div>
       </header>
-      <main class="flex">
-        <section
-          class="min-h-screen w-1/6 flex-auto border-r border-r-neutral-300 bg-slate-200 pt-28 dark:border-r-neutral-500 dark:bg-neutral-900"
-        ></section>
-        <section
-          class="min-h-screen w-3/6 border-r border-r-neutral-300 bg-slate-100 pt-24 dark:border-r-neutral-500 dark:bg-neutral-800"
-        ></section>
-        <section
-          class="min-h-screen w-2/6 flex-auto bg-white pt-24 dark:bg-neutral-700"
-        ></section>
-      </main>
     </div>
-    <script async>
-      const isDark = localStorage.getItem('dark')
-      if (!isDark) {
-        const darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)')
-        if (darkThemeMq.matches) {
-          document.body.parentElement?.classList.add('dark')
-          localStorage.setItem('dark', 'true')
-        } else {
-          localStorage.setItem('dark', 'false')
-        }
-      } else if (isDark === 'true') {
-        document.body.parentElement?.classList.add('dark')
-      }
-    </script>
   </body>
 </html>
