@@ -244,7 +244,7 @@ export default function App() {
 
       {/* Centered up to `max-w-app`; golden ratio split inside:
           input ≈ 61.8%, output ≈ 38.2%. */}
-      <main className="mx-auto grid min-h-0 w-full max-w-app flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)] lg:overflow-hidden min-[100rem]:border-x">
+      <main className="mx-auto grid min-h-0 w-full max-w-app flex-1 grid-cols-1 overflow-y-auto lg:grid-cols-[minmax(0,1.618fr)_minmax(0,1fr)] lg:overflow-hidden">
         <section
           aria-label="Input"
           className="flex flex-col gap-3 border-line p-5 lg:min-h-0 lg:overflow-y-auto lg:border-r"
